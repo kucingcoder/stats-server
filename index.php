@@ -88,8 +88,9 @@ function getRam() {
 
 // Function to get Disk
 function getDisk() {
-    $total = @disk_total_space("/");
-    $free = @disk_free_space("/");
+    $path = __DIR__;
+    $total = @disk_total_space($path);
+    $free = @disk_free_space($path);
     
     $temp = 'N/A';
     $nvmeTemp = @exec("cat /sys/class/nvme/nvme0/device/hwmon/hwmon*/temp1_input 2>/dev/null | head -n 1");
@@ -104,7 +105,7 @@ function getDisk() {
 
     if ($total !== false && $free !== false) {
         $used = $total - $free;
-        $percent = round(($used / $total) * 100, 1);
+        $percent = $total > 0 ? round(($used / $total) * 100, 2) : 0;
         return [
             'total' => round($total / 1024 / 1024 / 1024, 2) . " GB",
             'used' => round($used / 1024 / 1024 / 1024, 2) . " GB",
@@ -138,13 +139,18 @@ if (isset($_GET['api']) && $_GET['api'] == 'true') {
     ]);
     exit;
 }
+
+$hostname = gethostname();
+if (!$hostname) {
+    $hostname = 'Server Status';
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Server Status</title>
+    <title><?= htmlspecialchars($hostname) ?></title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -158,7 +164,7 @@ if (isset($_GET['api']) && $_GET['api'] == 'true') {
                 </svg>
             </div>
             <div class="header-text">
-                <h1>Server Status</h1>
+                <h1><?= htmlspecialchars($hostname) ?></h1>
                 <p class="ip-address" id="ip-display">Loading IP...</p>
             </div>
         </header>
@@ -173,7 +179,7 @@ if (isset($_GET['api']) && $_GET['api'] == 'true') {
                     </svg>
                 </div>
                 <div class="card-content">
-                    <h2>CPU Core</h2>
+                    <h2>CPU</h2>
                     <p class="spec-text"><span id="cpu-spec">Loading...</span><br>Temp: <span id="cpu-temp">N/A</span></p>
                     <div class="progress-container">
                         <div class="progress-bar-bg">
