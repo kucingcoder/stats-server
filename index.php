@@ -180,12 +180,11 @@ if (!$hostname) {
                 </div>
                 <div class="card-content">
                     <h2>CPU</h2>
-                    <p class="spec-text"><span id="cpu-spec">Loading...</span><br>Temp: <span id="cpu-temp">N/A</span></p>
+                    <p class="spec-text"><span id="cpu-spec">Loading...</span><br>Temp: <span id="cpu-temp">N/A</span><br><span class="percentage" id="cpu-percent">0%</span></p>
                     <div class="progress-container">
                         <div class="progress-bar-bg">
                             <div class="progress-bar-fill fill-cpu" id="cpu-bar" style="width: 0%"></div>
                         </div>
-                        <span class="percentage" id="cpu-percent">0%</span>
                     </div>
                 </div>
             </div>
@@ -199,12 +198,11 @@ if (!$hostname) {
                 </div>
                 <div class="card-content">
                     <h2>Memory (RAM)</h2>
-                    <p class="spec-text"><span id="ram-used">0 GB</span> / <span id="ram-total">0 GB</span></p>
+                    <p class="spec-text"><span id="ram-used">0 GB</span> / <span id="ram-total">0 GB</span><br><span class="percentage" id="ram-percent">0%</span></p>
                     <div class="progress-container">
                         <div class="progress-bar-bg">
                             <div class="progress-bar-fill fill-ram" id="ram-bar" style="width: 0%"></div>
                         </div>
-                        <span class="percentage" id="ram-percent">0%</span>
                     </div>
                 </div>
             </div>
@@ -218,12 +216,11 @@ if (!$hostname) {
                 </div>
                 <div class="card-content">
                     <h2>Storage</h2>
-                    <p class="spec-text"><span id="disk-used">0 GB</span> / <span id="disk-total">0 GB</span></p>
+                    <p class="spec-text"><span id="disk-used">0 GB</span> / <span id="disk-total">0 GB</span><br><span class="percentage" id="disk-percent">0%</span></p>
                     <div class="progress-container">
                         <div class="progress-bar-bg">
                             <div class="progress-bar-fill fill-storage" id="disk-bar" style="width: 0%"></div>
                         </div>
-                        <span class="percentage" id="disk-percent">0%</span>
                     </div>
                 </div>
             </div>

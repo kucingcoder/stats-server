@@ -212,11 +212,11 @@ header {
 .fill-storage { background: var(--storage-color); }
 
 .percentage {
-    position: absolute;
-    top: -35px;
-    right: 0;
+    display: block;
+    margin-top: 8px;
     font-weight: 800;
-    font-size: 1.2rem;
+    font-size: 1.4rem;
+    color: var(--text-color);
 }
 
 @keyframes float {
