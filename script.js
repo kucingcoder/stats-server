@@ -22,7 +22,7 @@ function updateUI(data) {
     document.getElementById('cpu-temp').innerHTML = data.cpu.temp;
     const cpuPercent = Math.min(Math.max(data.cpu.percent, 0), 100);
     document.getElementById('cpu-bar').style.width = `${cpuPercent}%`;
-    document.getElementById('cpu-percent').innerText = `${cpuPercent}%`;
+    document.getElementById('cpu-percent').innerText = `${cpuPercent.toFixed(2)}%`;
     updateColor('cpu-bar', cpuPercent);
 
     // Update RAM
@@ -30,16 +30,15 @@ function updateUI(data) {
     document.getElementById('ram-total').innerText = data.ram.total;
     const ramPercent = Math.min(Math.max(data.ram.percent, 0), 100);
     document.getElementById('ram-bar').style.width = `${ramPercent}%`;
-    document.getElementById('ram-percent').innerText = `${ramPercent}%`;
+    document.getElementById('ram-percent').innerText = `${ramPercent.toFixed(2)}%`;
     updateColor('ram-bar', ramPercent);
 
     // Update Storage
     document.getElementById('disk-used').innerText = data.disk.used;
     document.getElementById('disk-total').innerText = data.disk.total;
-    document.getElementById('disk-temp').innerHTML = data.disk.temp;
     const diskPercent = Math.min(Math.max(data.disk.percent, 0), 100);
     document.getElementById('disk-bar').style.width = `${diskPercent}%`;
-    document.getElementById('disk-percent').innerText = `${diskPercent}%`;
+    document.getElementById('disk-percent').innerText = `${diskPercent.toFixed(2)}%`;
     updateColor('disk-bar', diskPercent);
 }
 

@@ -215,7 +215,7 @@ if (isset($_GET['api']) && $_GET['api'] == 'true') {
                 </div>
                 <div class="card-content">
                     <h2>Storage</h2>
-                    <p class="spec-text"><span id="disk-used">0 GB</span> / <span id="disk-total">0 GB</span> | Temp: <span id="disk-temp">N/A</span></p>
+                    <p class="spec-text"><span id="disk-used">0 GB</span> / <span id="disk-total">0 GB</span></p>
                     <div class="progress-container">
                         <div class="progress-bar-bg">
                             <div class="progress-bar-fill fill-storage" id="disk-bar" style="width: 0%"></div>
