@@ -120,7 +120,7 @@ function getDisk() {
 
 // Function to get IP
 function getIp() {
-    $ip = exec("ip -4 -o addr show | awk '$2 != "lo" && $2 != "lo:" && !/(docker|podman|veth|br-)/ {print $4}' | cut -d/ -f1 | head -n 1 2>/dev/null");
+    $ip = exec("ip -4 -o addr show | awk '$2 != \"lo\" && $2 != \"lo:\" && !/(docker|podman|veth|br-)/ {print $4}' | cut -d/ -f1 | head -n 1 2>/dev/null");
     if (!$ip) {
         $ip = isset($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : '127.0.0.1';
     }
