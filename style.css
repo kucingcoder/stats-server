@@ -26,13 +26,45 @@
 
 body {
     font-family: var(--font-stack);
-    background-color: var(--bg-color);
+    background: linear-gradient(135deg, #0b0f16 0%, #150f28 50%, #071926 100%);
+    background-size: 400% 400%;
+    animation: gradientMove 15s ease infinite;
     color: var(--text-main);
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: flex-start;
     padding: 20px 10px;
+    position: relative;
+    overflow-x: hidden;
+}
+
+body::before, body::after {
+    content: '';
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(100px);
+    z-index: -1;
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+body::before {
+    width: 400px;
+    height: 400px;
+    background: #4c1d95; /* Deep purple */
+    top: -10%;
+    left: -10%;
+    animation: floatBlob 15s ease-in-out infinite alternate;
+}
+
+body::after {
+    width: 350px;
+    height: 350px;
+    background: #0ea5e9; /* Light blue */
+    bottom: -10%;
+    right: -10%;
+    animation: floatBlob2 18s ease-in-out infinite alternate;
 }
 
 .dashboard {
@@ -479,4 +511,20 @@ body {
     border-radius: 50%;
     margin-left: 2px;
     animation: pulseGlow 2s ease-in-out infinite;
+}
+
+@keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes floatBlob {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(100px, 100px) scale(1.1); }
+}
+
+@keyframes floatBlob2 {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(-100px, -80px) scale(1.15); }
 }
