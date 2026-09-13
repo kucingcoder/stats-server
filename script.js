@@ -9,7 +9,6 @@ async function fetchStats() {
         updateUI(data);
     } catch (error) {
         console.error('Error fetching stats:', error);
-        // Could add visual error state here
     }
 }
 
@@ -17,48 +16,72 @@ function formatPercent(p) {
     return Math.floor(p * 100) / 100;
 }
 
-function updateUI(data) {
-    // Update IP
-    document.getElementById('ip-display').innerText = data.ip;
-
-    // Update CPU
-    document.getElementById('cpu-spec').innerHTML = data.cpu.spec;
-    document.getElementById('cpu-temp').innerHTML = data.cpu.temp;
-    const cpuPercent = Math.min(Math.max(data.cpu.percent, 0), 100);
-    document.getElementById('cpu-bar').style.width = `${cpuPercent}%`;
-    document.getElementById('cpu-percent').innerText = `${formatPercent(cpuPercent)}%`;
-    updateColor('cpu-bar', cpuPercent);
-
-    // Update RAM
-    document.getElementById('ram-used').innerText = data.ram.used;
-    document.getElementById('ram-total').innerText = data.ram.total;
-    const ramPercent = Math.min(Math.max(data.ram.percent, 0), 100);
-    document.getElementById('ram-bar').style.width = `${ramPercent}%`;
-    document.getElementById('ram-percent').innerText = `${formatPercent(ramPercent)}%`;
-    updateColor('ram-bar', ramPercent);
-
-    // Update Storage
-    document.getElementById('disk-used').innerText = data.disk.used;
-    document.getElementById('disk-total').innerText = data.disk.total;
-    const diskPercent = Math.min(Math.max(data.disk.percent, 0), 100);
-    document.getElementById('disk-bar').style.width = `${diskPercent}%`;
-    document.getElementById('disk-percent').innerText = `${formatPercent(diskPercent)}%`;
-    updateColor('disk-bar', diskPercent);
+function getStatusBadge(type, percent) {
+    if (type === 'cpu') {
+        if (percent < 30) return { text: 'CHILLED', class: 'status-chilled' };
+        if (percent < 70) return { text: 'NORMAL', class: 'status-normal' };
+        return { text: 'HOT', class: 'status-hot' };
+    } else if (type === 'ram') {
+        if (percent < 60) return { text: 'OPTIMAL', class: 'status-optimal' };
+        if (percent < 85) return { text: 'HEAVY', class: 'status-heavy' };
+        return { text: 'CRITICAL', class: 'status-critical' };
+    } else if (type === 'disk') {
+        if (percent < 50) return { text: 'ULTRA ROOMY', class: 'status-roomy' };
+        if (percent < 80) return { text: 'OKAY', class: 'status-normal' };
+        return { text: 'FULL', class: 'status-critical' };
+    }
+    return { text: 'OK', class: 'status-normal' };
 }
 
-function updateColor(elementId, percent) {
-    const el = document.getElementById(elementId);
+function updateUI(data) {
+    // Update Home
+    if(document.getElementById('ip-display')) document.getElementById('ip-display').innerText = data.ip;
+    if(document.getElementById('uptime-display')) document.getElementById('uptime-display').innerText = data.uptime;
+
+    // Update CPU
+    if(document.getElementById('cpu-spec')) document.getElementById('cpu-spec').innerText = data.cpu.spec;
+    if(document.getElementById('cpu-temp')) document.getElementById('cpu-temp').innerHTML = data.cpu.temp;
+    const cpuPercent = Math.min(Math.max(data.cpu.percent, 0), 100);
+    if(document.getElementById('cpu-bar')) document.getElementById('cpu-bar').style.width = `${cpuPercent}%`;
+    if(document.getElementById('cpu-dot')) document.getElementById('cpu-dot').style.left = `calc(${cpuPercent}% - 4px)`;
+    if(document.getElementById('cpu-percent')) document.getElementById('cpu-percent').innerText = `${formatPercent(cpuPercent)}%`;
     
-    // Change color dynamically based on usage
-    if (percent > 90) {
-        el.style.backgroundColor = '#ef4444'; // Red
-    } else if (percent > 75) {
-        el.style.backgroundColor = '#f97316'; // Orange
-    } else {
-        // Reset to default CSS variable based on type
-        if (elementId.includes('cpu')) el.style.backgroundColor = 'var(--cpu-color)';
-        else if (elementId.includes('ram')) el.style.backgroundColor = 'var(--ram-color)';
-        else if (elementId.includes('disk')) el.style.backgroundColor = 'var(--storage-color)';
+    let cpuBadge = getStatusBadge('cpu', cpuPercent);
+    let cpuStatusEl = document.getElementById('cpu-status');
+    if (cpuStatusEl) {
+        cpuStatusEl.innerText = cpuBadge.text;
+        cpuStatusEl.className = `status-badge badge-cpu ${cpuBadge.class}`;
+    }
+
+    // Update RAM
+    if(document.getElementById('ram-used')) document.getElementById('ram-used').innerText = data.ram.used;
+    if(document.getElementById('ram-total')) document.getElementById('ram-total').innerText = data.ram.total;
+    if(document.getElementById('ram-free')) document.getElementById('ram-free').innerText = `${data.ram.free} free`;
+    const ramPercent = Math.min(Math.max(data.ram.percent, 0), 100);
+    if(document.getElementById('ram-bar')) document.getElementById('ram-bar').style.width = `${ramPercent}%`;
+    if(document.getElementById('ram-percent')) document.getElementById('ram-percent').innerText = `${formatPercent(ramPercent)}%`;
+    
+    let ramBadge = getStatusBadge('ram', ramPercent);
+    let ramStatusEl = document.getElementById('ram-status');
+    if (ramStatusEl) {
+        ramStatusEl.innerText = ramBadge.text;
+        ramStatusEl.className = `status-badge badge-ram ${ramBadge.class}`;
+    }
+
+    // Update Storage
+    if(document.getElementById('disk-used')) document.getElementById('disk-used').innerText = data.disk.used;
+    if(document.getElementById('disk-total')) document.getElementById('disk-total').innerText = data.disk.total;
+    if(document.getElementById('disk-free')) document.getElementById('disk-free').innerText = `${data.disk.free} free`;
+    const diskPercent = Math.min(Math.max(data.disk.percent, 0), 100);
+    if(document.getElementById('disk-bar')) document.getElementById('disk-bar').style.width = `${diskPercent}%`;
+    if(document.getElementById('disk-dot')) document.getElementById('disk-dot').style.left = `calc(${diskPercent}% - 4px)`;
+    if(document.getElementById('disk-percent')) document.getElementById('disk-percent').innerText = `${formatPercent(diskPercent)}%`;
+    
+    let diskBadge = getStatusBadge('disk', diskPercent);
+    let diskStatusEl = document.getElementById('disk-status');
+    if (diskStatusEl) {
+        diskStatusEl.innerText = diskBadge.text;
+        diskStatusEl.className = `status-badge badge-storage ${diskBadge.class}`;
     }
 }
 

@@ -1,4 +1,4 @@
-
+css_code = """
 :root {
     --bg-color: #0b0f16;
     --card-bg: rgba(22, 28, 45, 0.85);
@@ -421,3 +421,7 @@ body {
         flex-basis: 100%;
     }
 }
+"""
+
+with open("style.css", "w") as f:
+    f.write(css_code)
