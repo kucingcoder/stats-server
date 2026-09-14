@@ -37,6 +37,8 @@ function updateUI(data) {
     // Update Home
     if(document.getElementById('ip-display')) document.getElementById('ip-display').innerText = data.ip;
     if(document.getElementById('uptime-display')) document.getElementById('uptime-display').innerText = data.uptime;
+    if(document.getElementById('net-rx') && data.network) document.getElementById('net-rx').innerText = data.network.rx + ' In';
+    if(document.getElementById('net-tx') && data.network) document.getElementById('net-tx').innerText = data.network.tx + ' Out';
 
     // Update CPU
     if(document.getElementById('cpu-spec')) document.getElementById('cpu-spec').innerText = data.cpu.spec;

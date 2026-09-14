@@ -199,6 +199,39 @@ function getUptime() {
     return 'N/A';
 }
 
+// Function to get Network Stats
+function getNetworkStats() {
+    $netdev = @file('/proc/net/dev');
+    $rx = 0;
+    $tx = 0;
+    if ($netdev) {
+        foreach ($netdev as $line) {
+            if (strpos($line, ':') === false) continue;
+            $parts = explode(':', $line);
+            $interface = trim($parts[0]);
+            if ($interface === 'lo') continue;
+            
+            $stats = preg_split('/\s+/', trim($parts[1]));
+            $rx += (float) $stats[0];
+            $tx += (float) $stats[8];
+        }
+    }
+    
+    $formatBytes = function($bytes) {
+        $units = ['B', 'KB', 'MB', 'GB', 'TB'];
+        $bytes = max($bytes, 0);
+        $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
+        $pow = min($pow, count($units) - 1);
+        $bytes /= pow(1024, $pow);
+        return round($bytes, 2) . ' ' . $units[$pow];
+    };
+    
+    return [
+        'rx' => $formatBytes($rx),
+        'tx' => $formatBytes($tx)
+    ];
+}
+
 if (isset($_GET['api']) && $_GET['api'] == 'true') {
     header('Content-Type: application/json');
     echo json_encode([
@@ -211,7 +244,8 @@ if (isset($_GET['api']) && $_GET['api'] == 'true') {
         ],
         'ram' => getRam(),
         'swap' => getSwap(),
-        'disk' => getDisk()
+        'disk' => getDisk(),
+        'network' => getNetworkStats()
     ]);
     exit;
 }
@@ -267,6 +301,18 @@ if (file_exists('/etc/os-release')) {
                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         Uptime <span id="uptime-display">N/A</span>
+                    </div>
+                    <div class="uptime" style="margin-left: 10px; color: #10b981;">
+                        <svg class="icon-xs" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                        </svg>
+                        <span id="net-rx">0 B</span>
+                    </div>
+                    <div class="uptime" style="margin-left: 10px; color: #f43f5e;">
+                        <svg class="icon-xs" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                        </svg>
+                        <span id="net-tx">0 B</span>
                     </div>
                 </div>
                 <div class="card-home-right">
@@ -342,7 +388,7 @@ if (file_exists('/etc/os-release')) {
                             <span class="percentage" id="ram-percent">0%</span>
                             <span class="status-badge badge-ram" id="ram-status">OPTIMAL</span>
                         </div>
-                        <div class="card-temp" style="color: var(--ram-color);">
+                        <div class="card-temp" style="color: var(--ram-color); font-size: 0.9rem; padding: 4px 8px;">
                             <span id="ram-cached">Loading...</span>
                         </div>
                     </div>
