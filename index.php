@@ -404,7 +404,7 @@ if (file_exists('/etc/os-release')) {
                     </div>
                     <div class="card-titles">
                         <span class="sub-title storage-color">NON-VOLATILE</span>
-                        <h2 id="disk-type">Storage</h2>
+                        <h2>Storage</h2>
                         <span class="spec-text"><span id="disk-used">0 GB</span> / <span id="disk-total">0 GB</span></span>
                     </div>
                     <div class="card-free badge-outline-storage">
@@ -417,11 +417,8 @@ if (file_exists('/etc/os-release')) {
                             <span class="percentage" id="disk-percent">0%</span>
                             <span class="status-badge badge-storage" id="disk-status">ULTRA ROOMY</span>
                         </div>
-                        <div class="mini-chart storage-chart">
-                            <div class="bar h-2"></div>
-                            <div class="bar h-4"></div>
-                            <div class="bar h-3"></div>
-                            <div class="bar h-5"></div>
+                        <div class="card-temp" style="color: var(--storage-color);">
+                            <span id="disk-type">Loading...</span>
                         </div>
                     </div>
                     <div class="progress-container">
