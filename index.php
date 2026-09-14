@@ -110,6 +110,41 @@ function getSwap() {
     return ['total' => '0 GB', 'used' => '0 GB', 'free' => '0 GB', 'percent' => 0];
 }
 
+// Function to get Disk Type
+function getDiskType() {
+    $path = __DIR__;
+    $df = @exec("df -P " . escapeshellarg($path) . " | tail -1 | awk '{print $1}'");
+    if (!$df) return 'Storage';
+    
+    $lsblk = @exec("lsblk -no pkname,name,rota " . escapeshellarg($df));
+    if (!$lsblk) return 'Storage';
+    
+    $parts = preg_split('/\s+/', trim($lsblk));
+    $rota = array_pop($parts);
+    $name = array_pop($parts);
+    $pkname = array_pop($parts);
+    
+    $disk = $pkname ?: $name; 
+    
+    if (strpos($disk, 'nvme') === 0) {
+        return 'NVMe SSD';
+    } elseif (strpos($disk, 'mmcblk') === 0) {
+        $typePath = "/sys/block/$disk/device/type";
+        if (file_exists($typePath)) {
+            $mmcType = trim(file_get_contents($typePath));
+            if ($mmcType === 'MMC') return 'eMMC';
+            if ($mmcType === 'SD') return 'Micro SD';
+        }
+        return 'SD/eMMC';
+    } elseif (strpos($disk, 'sd') === 0) {
+        return $rota == '1' ? 'HDD' : 'SATA SSD';
+    } elseif (strpos($disk, 'vd') === 0) {
+        return 'Virtual Disk';
+    }
+    
+    return $rota == '1' ? 'HDD' : 'SSD';
+}
+
 // Function to get Disk
 function getDisk() {
     $path = __DIR__;
@@ -131,6 +166,7 @@ function getDisk() {
         $used = $total - $free;
         $percent = $total > 0 ? round(($used / $total) * 100, 2) : 0;
         return [
+            'type' => getDiskType(),
             'total' => round($total / 1024 / 1024 / 1024, 2) . " GB",
             'used' => round($used / 1024 / 1024 / 1024, 2) . " GB",
             'free' => round($free / 1024 / 1024 / 1024, 2) . " GB",
@@ -138,7 +174,7 @@ function getDisk() {
             'temp' => $temp
         ];
     }
-    return ['total' => '0 GB', 'used' => '0 GB', 'free' => '0 GB', 'percent' => 0, 'temp' => $temp];
+    return ['type' => 'Storage', 'total' => '0 GB', 'used' => '0 GB', 'free' => '0 GB', 'percent' => 0, 'temp' => $temp];
 }
 
 // Function to get IP
@@ -368,7 +404,7 @@ if (file_exists('/etc/os-release')) {
                     </div>
                     <div class="card-titles">
                         <span class="sub-title storage-color">NON-VOLATILE</span>
-                        <h2>Storage</h2>
+                        <h2 id="disk-type">Storage</h2>
                         <span class="spec-text"><span id="disk-used">0 GB</span> / <span id="disk-total">0 GB</span></span>
                     </div>
                     <div class="card-free badge-outline-storage">

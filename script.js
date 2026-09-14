@@ -86,6 +86,7 @@ function updateUI(data) {
     }
 
     // Update Storage
+    if(document.getElementById('disk-type')) document.getElementById('disk-type').innerText = data.disk.type || 'Storage';
     if(document.getElementById('disk-used')) document.getElementById('disk-used').innerText = data.disk.used;
     if(document.getElementById('disk-total')) document.getElementById('disk-total').innerText = data.disk.total;
     if(document.getElementById('disk-free')) document.getElementById('disk-free').innerText = `${data.disk.free} free`;
