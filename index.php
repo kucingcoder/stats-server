@@ -309,6 +309,12 @@ if (file_exists('/etc/os-release')) {
                             <span class="percentage" id="ram-percent">0%</span>
                             <span class="status-badge badge-ram" id="ram-status">OPTIMAL</span>
                         </div>
+                        <div class="mini-chart ram-chart">
+                            <div class="bar h-2"></div>
+                            <div class="bar h-4"></div>
+                            <div class="bar h-3"></div>
+                            <div class="bar h-5"></div>
+                        </div>
                     </div>
                     <div class="progress-container">
                         <div class="progress-bar-bg">
@@ -341,6 +347,12 @@ if (file_exists('/etc/os-release')) {
                             <span class="percentage" id="swap-percent">0%</span>
                             <span class="status-badge badge-swap" id="swap-status">OPTIMAL</span>
                         </div>
+                        <div class="mini-chart swap-chart">
+                            <div class="bar h-2"></div>
+                            <div class="bar h-4"></div>
+                            <div class="bar h-3"></div>
+                            <div class="bar h-5"></div>
+                        </div>
                     </div>
                     <div class="progress-container">
                         <div class="progress-bar-bg">
@@ -372,6 +384,12 @@ if (file_exists('/etc/os-release')) {
                         <div class="main-stat">
                             <span class="percentage" id="disk-percent">0%</span>
                             <span class="status-badge badge-storage" id="disk-status">ULTRA ROOMY</span>
+                        </div>
+                        <div class="mini-chart storage-chart">
+                            <div class="bar h-2"></div>
+                            <div class="bar h-4"></div>
+                            <div class="bar h-3"></div>
+                            <div class="bar h-5"></div>
                         </div>
                     </div>
                     <div class="progress-container">
