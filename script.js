@@ -73,6 +73,7 @@ function updateUI(data) {
 
     // Update SWAP
     if (data.swap) {
+        if(document.getElementById('swap-swappiness')) document.getElementById('swap-swappiness').innerText = data.swap.swappiness;
         if(document.getElementById('swap-used')) document.getElementById('swap-used').innerText = data.swap.used;
         if(document.getElementById('swap-total')) document.getElementById('swap-total').innerText = data.swap.total;
         if(document.getElementById('swap-free')) document.getElementById('swap-free').innerText = `${data.swap.free} free`;

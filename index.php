@@ -101,14 +101,18 @@ function getSwap() {
         $used = $total - $free;
         $usagePercent = $total > 0 ? round(($used / $total) * 100, 1) : 0;
         
+        $swappiness = @file_get_contents('/proc/sys/vm/swappiness');
+        $swappiness = $swappiness !== false ? trim($swappiness) : 'N/A';
+        
         return [
+            'swappiness' => $swappiness,
             'total' => round($total / 1024 / 1024, 2) . " GB",
             'used' => round($used / 1024 / 1024, 2) . " GB",
             'free' => round($free / 1024 / 1024, 2) . " GB",
             'percent' => $usagePercent
         ];
     }
-    return ['total' => '0 GB', 'used' => '0 GB', 'free' => '0 GB', 'percent' => 0];
+    return ['swappiness' => 'N/A', 'total' => '0 GB', 'used' => '0 GB', 'free' => '0 GB', 'percent' => 0];
 }
 
 // Function to get Disk Type
@@ -425,11 +429,8 @@ if (file_exists('/etc/os-release')) {
                             <span class="percentage" id="swap-percent">0%</span>
                             <span class="status-badge badge-swap" id="swap-status">OPTIMAL</span>
                         </div>
-                        <div class="mini-chart swap-chart">
-                            <div class="bar h-2"></div>
-                            <div class="bar h-4"></div>
-                            <div class="bar h-3"></div>
-                            <div class="bar h-5"></div>
+                        <div class="card-temp" style="color: var(--swap-color); font-size: 0.9rem; padding: 4px 8px;">
+                            Swappiness: <span id="swap-swappiness">N/A</span>
                         </div>
                     </div>
                     <div class="progress-container">
