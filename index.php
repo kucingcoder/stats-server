@@ -181,7 +181,9 @@ if (isset($_GET['api']) && $_GET['api'] == 'true') {
 
 $hostname = gethostname();
 if (!$hostname) {
-    $hostname = 'Server Status';
+    $hostname = 'ServerStatus';
+} else {
+    $hostname = str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', $hostname)));
 }
 
 $os_name = php_uname('s');
