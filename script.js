@@ -118,9 +118,13 @@ function updateUI(data) {
         if (data.services.websites) {
             data.services.websites.forEach(srv => {
                 const color = srv.status === 'Running' ? 'var(--ram-color)' : 'var(--text-muted)';
+                let nameHtml = srv.name;
+                if (srv.name !== 'Not Detected' && srv.name !== 'Default Site') {
+                    nameHtml = `<a href="http://${srv.name}" target="_blank" style="color: inherit; text-decoration: none;" onmouseover="this.style.textDecoration='underline'; this.style.color='#38bdf8';" onmouseout="this.style.textDecoration='none'; this.style.color='inherit';">${srv.name}</a>`;
+                }
                 srvList.innerHTML += `
                     <div class="list-item">
-                        <span class="item-name">${srv.name}</span>
+                        <span class="item-name">${nameHtml}</span>
                         <span class="item-value" style="color: ${color};">${srv.status}</span>
                     </div>
                 `;
