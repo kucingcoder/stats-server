@@ -282,7 +282,6 @@ if (file_exists('/etc/os-release')) {
                             <span class="percentage" id="ram-percent">0%</span>
                             <span class="status-badge badge-ram" id="ram-status">OPTIMAL</span>
                         </div>
-                        <div class="stat-desc">Buffered & Active</div>
                     </div>
                     <div class="progress-container">
                         <div class="progress-bar-bg">
