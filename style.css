@@ -287,6 +287,13 @@ body::after {
 }
 
 /* Lists */
+.card-list {
+    justify-content: flex-start;
+}
+.card-list .card-titles {
+    flex-grow: 0;
+}
+
 .list-container {
     display: flex;
     flex-direction: column;
