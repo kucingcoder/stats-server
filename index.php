@@ -37,9 +37,9 @@ function getCpuSpec() {
         if (preg_match_all('/^processor/m', $cpuinfo, $matches)) {
             $cores = count($matches[0]);
         }
-        return "$model ($cores Cores)";
+        return ['model' => $model, 'cores' => $cores];
     }
-    return "Unknown CPU";
+    return ['model' => 'Unknown CPU', 'cores' => 0];
 }
 
 // Function to get CPU Temp
@@ -257,7 +257,7 @@ if (file_exists('/etc/os-release')) {
                     </div>
                     <div class="card-titles">
                         <span class="sub-title cpu-color">PROCESSOR</span>
-                        <h2>CPU</h2>
+                        <h2 id="cpu-model">CPU</h2>
                         <span class="spec-text" id="cpu-spec">Loading...</span>
                     </div>
                     <div class="card-temp">
