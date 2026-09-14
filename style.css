@@ -425,6 +425,26 @@ body::after {
 .dot-cpu { background: #fb7185; }
 .dot-storage { background: #fbbf24; }
 
+:root {
+    --swap-color: #c026d3;
+    --swap-bg: #701a75;
+}
+.fill-swap { 
+    background: var(--swap-color);
+    box-shadow: 0 8px 20px rgba(192, 38, 211, 0.3);
+}
+.swap-color { color: var(--swap-color); }
+.badge-outline-swap {
+    background: rgba(192, 38, 211, 0.1);
+    color: var(--swap-color);
+    border: 1px solid rgba(192, 38, 211, 0.2);
+}
+.badge-swap {
+    background: rgba(192, 38, 211, 0.15);
+    color: #e879f9;
+}
+.dot-swap { background: var(--swap-color); }
+
 .icon-sm {
     width: 16px;
     height: 16px;

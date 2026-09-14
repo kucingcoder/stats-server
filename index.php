@@ -87,6 +87,29 @@ function getRam() {
     return ['total' => '0 GB', 'used' => '0 GB', 'free' => '0 GB', 'percent' => 0];
 }
 
+// Function to get SWAP
+function getSwap() {
+    $meminfo = @file_get_contents('/proc/meminfo');
+    if ($meminfo) {
+        preg_match('/SwapTotal:\s+(\d+)\s+kB/', $meminfo, $totalMatches);
+        preg_match('/SwapFree:\s+(\d+)\s+kB/', $meminfo, $freeMatches);
+        
+        $total = isset($totalMatches[1]) ? $totalMatches[1] : 0;
+        $free = isset($freeMatches[1]) ? $freeMatches[1] : 0;
+        
+        $used = $total - $free;
+        $usagePercent = $total > 0 ? round(($used / $total) * 100, 1) : 0;
+        
+        return [
+            'total' => round($total / 1024 / 1024, 2) . " GB",
+            'used' => round($used / 1024 / 1024, 2) . " GB",
+            'free' => round($free / 1024 / 1024, 2) . " GB",
+            'percent' => $usagePercent
+        ];
+    }
+    return ['total' => '0 GB', 'used' => '0 GB', 'free' => '0 GB', 'percent' => 0];
+}
+
 // Function to get Disk
 function getDisk() {
     $path = __DIR__;
@@ -150,6 +173,7 @@ if (isset($_GET['api']) && $_GET['api'] == 'true') {
             'temp' => getCpuTemp()
         ],
         'ram' => getRam(),
+        'swap' => getSwap(),
         'disk' => getDisk()
     ]);
     exit;
@@ -286,6 +310,38 @@ if (file_exists('/etc/os-release')) {
                     <div class="progress-container">
                         <div class="progress-bar-bg">
                             <div class="progress-bar-fill fill-ram" id="ram-bar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SWAP Card -->
+            <div class="card card-stats">
+                <div class="card-top">
+                    <div class="icon-box fill-swap">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                        </svg>
+                    </div>
+                    <div class="card-titles">
+                        <span class="sub-title swap-color">PAGING SPACE</span>
+                        <h2>SWAP Memory</h2>
+                        <span class="spec-text"><span id="swap-used">0 GB</span> / <span id="swap-total">0 GB</span></span>
+                    </div>
+                    <div class="card-free badge-outline-swap">
+                        <span id="swap-free">0 GB free</span>
+                    </div>
+                </div>
+                <div class="card-bottom">
+                    <div class="bottom-stats">
+                        <div class="main-stat">
+                            <span class="percentage" id="swap-percent">0%</span>
+                            <span class="status-badge badge-swap" id="swap-status">OPTIMAL</span>
+                        </div>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill fill-swap" id="swap-bar" style="width: 0%"></div>
                         </div>
                     </div>
                 </div>

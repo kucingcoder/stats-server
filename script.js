@@ -68,6 +68,23 @@ function updateUI(data) {
         ramStatusEl.className = `status-badge badge-ram ${ramBadge.class}`;
     }
 
+    // Update SWAP
+    if (data.swap) {
+        if(document.getElementById('swap-used')) document.getElementById('swap-used').innerText = data.swap.used;
+        if(document.getElementById('swap-total')) document.getElementById('swap-total').innerText = data.swap.total;
+        if(document.getElementById('swap-free')) document.getElementById('swap-free').innerText = `${data.swap.free} free`;
+        const swapPercent = Math.min(Math.max(data.swap.percent, 0), 100);
+        if(document.getElementById('swap-bar')) document.getElementById('swap-bar').style.width = `${swapPercent}%`;
+        if(document.getElementById('swap-percent')) document.getElementById('swap-percent').innerText = `${formatPercent(swapPercent)}%`;
+        
+        let swapBadge = getStatusBadge('ram', swapPercent); // Re-use RAM thresholds for SWAP
+        let swapStatusEl = document.getElementById('swap-status');
+        if (swapStatusEl) {
+            swapStatusEl.innerText = swapBadge.text;
+            swapStatusEl.className = `status-badge badge-swap ${swapBadge.class}`;
+        }
+    }
+
     // Update Storage
     if(document.getElementById('disk-used')) document.getElementById('disk-used').innerText = data.disk.used;
     if(document.getElementById('disk-total')) document.getElementById('disk-total').innerText = data.disk.total;
