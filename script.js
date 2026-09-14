@@ -105,6 +105,52 @@ function updateUI(data) {
         diskStatusEl.innerText = diskBadge.text;
         diskStatusEl.className = `status-badge badge-storage ${diskBadge.class}`;
     }
+
+    // Update Top Processes
+    if (data.top_processes && document.getElementById('top-processes-list')) {
+        const topList = document.getElementById('top-processes-list');
+        topList.innerHTML = '';
+        data.top_processes.forEach(proc => {
+            topList.innerHTML += `
+                <div class="list-item">
+                    <span class="item-name">${proc.name}</span>
+                    <span class="item-value" style="color: var(--cpu-color);">${proc.cpu}% <span style="font-size:0.75rem;color:var(--text-muted);">CPU</span></span>
+                </div>
+            `;
+        });
+    }
+
+    // Update Services
+    if (data.services && document.getElementById('services-list')) {
+        const srvList = document.getElementById('services-list');
+        srvList.innerHTML = '';
+        
+        // Podman
+        if (data.services.podman) {
+            data.services.podman.forEach(srv => {
+                const color = srv.status === 'Running' ? 'var(--ram-color)' : 'var(--text-muted)';
+                srvList.innerHTML += `
+                    <div class="list-item">
+                        <span class="item-name">${srv.name} <span style="font-size:0.75rem;color:var(--text-muted);">podman</span></span>
+                        <span class="item-value" style="color: ${color};">${srv.status}</span>
+                    </div>
+                `;
+            });
+        }
+        
+        // Apache
+        if (data.services.apache) {
+            data.services.apache.forEach(srv => {
+                const color = srv.status === 'Running' ? 'var(--ram-color)' : 'var(--text-muted)';
+                srvList.innerHTML += `
+                    <div class="list-item">
+                        <span class="item-name">${srv.name} <span style="font-size:0.75rem;color:var(--text-muted);">apache</span></span>
+                        <span class="item-value" style="color: ${color};">${srv.status}</span>
+                    </div>
+                `;
+            });
+        }
+    }
 }
 
 // Initial fetch

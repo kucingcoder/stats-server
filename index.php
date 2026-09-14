@@ -236,6 +236,83 @@ function getNetworkStats() {
     ];
 }
 
+// Function to get Top Processes
+function getTopProcesses() {
+    @exec('ps -eo comm,%cpu,%mem --sort=-%cpu | head -n 6', $lines);
+    $processes = [];
+    if (!empty($lines) && count($lines) > 1) {
+        for ($i = 1; $i < count($lines); $i++) {
+            $line = trim($lines[$i]);
+            $parts = preg_split('/\s+/', $line);
+            if (count($parts) >= 3) {
+                $mem = array_pop($parts);
+                $cpu = array_pop($parts);
+                $comm = implode(' ', $parts);
+                $processes[] = [
+                    'name' => $comm,
+                    'cpu' => $cpu,
+                    'mem' => $mem
+                ];
+            }
+        }
+    }
+    return $processes;
+}
+
+// Function to get Services
+function getServices() {
+    $services = [
+        'podman' => [],
+        'apache' => []
+    ];
+    
+    // Podman
+    @exec('podman ps -a --format "{{.Names}}|{{.Status}}" 2>/dev/null', $podmanLines);
+    if (!empty($podmanLines)) {
+        foreach ($podmanLines as $line) {
+            $parts = explode('|', trim($line));
+            if (count($parts) == 2) {
+                $statusFull = $parts[1];
+                $status = (strpos($statusFull, 'Up') === 0) ? 'Running' : 'Stopped';
+                $services['podman'][] = [
+                    'name' => $parts[0],
+                    'status' => $status,
+                    'status_full' => $statusFull
+                ];
+            }
+        }
+    }
+    
+    // Apache
+    @exec('systemctl is-active apache2 2>/dev/null', $apacheStatus);
+    $isApacheRunning = (!empty($apacheStatus) && trim($apacheStatus[0]) === 'active');
+    
+    if ($isApacheRunning) {
+        $confFiles = @glob('/etc/apache2/sites-enabled/*.conf');
+        $apacheSites = [];
+        if ($confFiles) {
+            foreach ($confFiles as $file) {
+                $content = @file_get_contents($file);
+                if ($content && preg_match('/^\s*ServerName\s+([^\s]+)/m', $content, $m)) {
+                    $apacheSites[] = $m[1];
+                }
+            }
+        }
+        
+        if (empty($apacheSites)) {
+            $services['apache'][] = ['name' => 'Default Site', 'status' => 'Running'];
+        } else {
+            foreach ($apacheSites as $site) {
+                $services['apache'][] = ['name' => $site, 'status' => 'Running'];
+            }
+        }
+    } else {
+        $services['apache'][] = ['name' => 'Apache Web Server', 'status' => 'Stopped'];
+    }
+    
+    return $services;
+}
+
 if (isset($_GET['api']) && $_GET['api'] == 'true') {
     header('Content-Type: application/json');
     echo json_encode([
@@ -249,7 +326,9 @@ if (isset($_GET['api']) && $_GET['api'] == 'true') {
         'ram' => getRam(),
         'swap' => getSwap(),
         'disk' => getDisk(),
-        'network' => getNetworkStats()
+        'network' => getNetworkStats(),
+        'top_processes' => getTopProcesses(),
+        'services' => getServices()
     ]);
     exit;
 }
@@ -474,6 +553,28 @@ if (file_exists('/etc/os-release')) {
                             <div class="progress-dot dot-storage" id="disk-dot" style="left: 0%"></div>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <!-- Top Processes Card -->
+            <div class="card card-list">
+                <div class="card-titles" style="margin-bottom: 15px;">
+                    <span class="sub-title cpu-color">REAL-TIME</span>
+                    <h2>Top Processes</h2>
+                </div>
+                <div class="list-container" id="top-processes-list">
+                    <div class="list-item">Loading...</div>
+                </div>
+            </div>
+
+            <!-- Services Card -->
+            <div class="card card-list">
+                <div class="card-titles" style="margin-bottom: 15px;">
+                    <span class="sub-title ram-color">SERVICES & WEBSITES</span>
+                    <h2>Status</h2>
+                </div>
+                <div class="list-container" id="services-list">
+                    <div class="list-item">Loading...</div>
                 </div>
             </div>
 
