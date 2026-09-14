@@ -39,8 +39,7 @@ function updateUI(data) {
     if(document.getElementById('uptime-display')) document.getElementById('uptime-display').innerText = data.uptime;
 
     // Update CPU
-    if(document.getElementById('cpu-model')) document.getElementById('cpu-model').innerText = data.cpu.spec.model;
-    if(document.getElementById('cpu-spec')) document.getElementById('cpu-spec').innerText = `${data.cpu.spec.cores} CPU`;
+    if(document.getElementById('cpu-spec')) document.getElementById('cpu-spec').innerText = data.cpu.spec;
     if(document.getElementById('cpu-temp')) document.getElementById('cpu-temp').innerHTML = data.cpu.temp;
     const cpuPercent = Math.min(Math.max(data.cpu.percent, 0), 100);
     if(document.getElementById('cpu-bar')) document.getElementById('cpu-bar').style.width = `${cpuPercent}%`;
