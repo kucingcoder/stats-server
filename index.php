@@ -208,6 +208,9 @@ if (file_exists('/etc/os-release')) {
     <link rel="stylesheet" href="style.css?v=<?= time() ?>">
 </head>
 <body>
+    <!-- Background Decorators -->
+    <div class="bg-pattern"></div>
+    <div class="bg-grid"></div>
 
     <div class="dashboard">
         <main class="grid-container">
