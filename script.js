@@ -54,6 +54,7 @@ function updateUI(data) {
     }
 
     // Update RAM
+    if(document.getElementById('ram-cached')) document.getElementById('ram-cached').innerText = data.ram.cached || '';
     if(document.getElementById('ram-used')) document.getElementById('ram-used').innerText = data.ram.used;
     if(document.getElementById('ram-total')) document.getElementById('ram-total').innerText = data.ram.total;
     if(document.getElementById('ram-free')) document.getElementById('ram-free').innerText = `${data.ram.free} free`;

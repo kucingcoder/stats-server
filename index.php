@@ -57,17 +57,17 @@ function getRam() {
     if ($meminfo) {
         preg_match('/MemTotal:\s+(\d+)\s+kB/', $meminfo, $totalMatches);
         preg_match('/MemAvailable:\s+(\d+)\s+kB/', $meminfo, $availableMatches);
+        preg_match('/^Cached:\s+(\d+)\s+kB/m', $meminfo, $cachedMatchesGlobal);
+        $cachedGlobal = isset($cachedMatchesGlobal[1]) ? $cachedMatchesGlobal[1] : 0;
         
         // Fallback for older kernels without MemAvailable
         if (empty($availableMatches)) {
              preg_match('/MemFree:\s+(\d+)\s+kB/', $meminfo, $freeMatches);
              preg_match('/Buffers:\s+(\d+)\s+kB/', $meminfo, $bufferMatches);
-             preg_match('/Cached:\s+(\d+)\s+kB/', $meminfo, $cachedMatches);
              
              $free = isset($freeMatches[1]) ? $freeMatches[1] : 0;
              $buffers = isset($bufferMatches[1]) ? $bufferMatches[1] : 0;
-             $cached = isset($cachedMatches[1]) ? $cachedMatches[1] : 0;
-             $available = $free + $buffers + $cached;
+             $available = $free + $buffers + $cachedGlobal;
         } else {
              $available = $availableMatches[1];
         }
@@ -78,13 +78,14 @@ function getRam() {
         $usagePercent = $total > 0 ? round(($used / $total) * 100, 1) : 0;
         
         return [
+            'cached' => round($cachedGlobal / 1024 / 1024, 2) . " GB Cached",
             'total' => round($total / 1024 / 1024, 2) . " GB",
             'used' => round($used / 1024 / 1024, 2) . " GB",
             'free' => round($available / 1024 / 1024, 2) . " GB",
             'percent' => $usagePercent
         ];
     }
-    return ['total' => '0 GB', 'used' => '0 GB', 'free' => '0 GB', 'percent' => 0];
+    return ['cached' => '0 GB Cached', 'total' => '0 GB', 'used' => '0 GB', 'free' => '0 GB', 'percent' => 0];
 }
 
 // Function to get SWAP
@@ -341,11 +342,8 @@ if (file_exists('/etc/os-release')) {
                             <span class="percentage" id="ram-percent">0%</span>
                             <span class="status-badge badge-ram" id="ram-status">OPTIMAL</span>
                         </div>
-                        <div class="mini-chart ram-chart">
-                            <div class="bar h-2"></div>
-                            <div class="bar h-4"></div>
-                            <div class="bar h-3"></div>
-                            <div class="bar h-5"></div>
+                        <div class="card-temp" style="color: var(--ram-color);">
+                            <span id="ram-cached">Loading...</span>
                         </div>
                     </div>
                     <div class="progress-container">
