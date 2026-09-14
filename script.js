@@ -17,20 +17,10 @@ function formatPercent(p) {
 }
 
 function getStatusBadge(type, percent) {
-    if (type === 'cpu') {
-        if (percent < 30) return { text: 'CHILLED', class: 'status-chilled' };
-        if (percent < 70) return { text: 'NORMAL', class: 'status-normal' };
-        return { text: 'HOT', class: 'status-hot' };
-    } else if (type === 'ram') {
-        if (percent < 60) return { text: 'OPTIMAL', class: 'status-optimal' };
-        if (percent < 85) return { text: 'HEAVY', class: 'status-heavy' };
-        return { text: 'CRITICAL', class: 'status-critical' };
-    } else if (type === 'disk') {
-        if (percent < 50) return { text: 'ULTRA ROOMY', class: 'status-roomy' };
-        if (percent < 80) return { text: 'OKAY', class: 'status-normal' };
-        return { text: 'FULL', class: 'status-critical' };
-    }
-    return { text: 'OK', class: 'status-normal' };
+    if (percent < 30) return { text: 'FREE', class: '' };
+    if (percent < 70) return { text: 'OPTIMAL', class: '' };
+    if (percent < 90) return { text: 'CROWDED', class: '' };
+    return { text: 'FULL', class: '' };
 }
 
 function updateUI(data) {
@@ -120,31 +110,18 @@ function updateUI(data) {
         });
     }
 
-    // Update Services
+    // Update Websites
     if (data.services && document.getElementById('services-list')) {
         const srvList = document.getElementById('services-list');
         srvList.innerHTML = '';
         
-        // Podman
-        if (data.services.podman) {
-            data.services.podman.forEach(srv => {
+        if (data.services.websites) {
+            data.services.websites.forEach(srv => {
                 const color = srv.status === 'Running' ? 'var(--ram-color)' : 'var(--text-muted)';
+                const typeHtml = srv.type ? `<span style="font-size:0.75rem;color:var(--text-muted);">${srv.type}</span>` : '';
                 srvList.innerHTML += `
                     <div class="list-item">
-                        <span class="item-name">${srv.name} <span style="font-size:0.75rem;color:var(--text-muted);">podman</span></span>
-                        <span class="item-value" style="color: ${color};">${srv.status}</span>
-                    </div>
-                `;
-            });
-        }
-        
-        // Apache
-        if (data.services.apache) {
-            data.services.apache.forEach(srv => {
-                const color = srv.status === 'Running' ? 'var(--ram-color)' : 'var(--text-muted)';
-                srvList.innerHTML += `
-                    <div class="list-item">
-                        <span class="item-name">${srv.name} <span style="font-size:0.75rem;color:var(--text-muted);">apache</span></span>
+                        <span class="item-name">${srv.name} ${typeHtml}</span>
                         <span class="item-value" style="color: ${color};">${srv.status}</span>
                     </div>
                 `;

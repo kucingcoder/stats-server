@@ -259,29 +259,11 @@ function getTopProcesses() {
     return $processes;
 }
 
-// Function to get Services
+// Function to get Websites
 function getServices() {
     $services = [
-        'podman' => [],
-        'apache' => []
+        'websites' => []
     ];
-    
-    // Podman
-    @exec('podman ps -a --format "{{.Names}}|{{.Status}}" 2>/dev/null', $podmanLines);
-    if (!empty($podmanLines)) {
-        foreach ($podmanLines as $line) {
-            $parts = explode('|', trim($line));
-            if (count($parts) == 2) {
-                $statusFull = $parts[1];
-                $status = (strpos($statusFull, 'Up') === 0) ? 'Running' : 'Stopped';
-                $services['podman'][] = [
-                    'name' => $parts[0],
-                    'status' => $status,
-                    'status_full' => $statusFull
-                ];
-            }
-        }
-    }
     
     // Apache
     @exec('systemctl is-active apache2 2>/dev/null', $apacheStatus);
@@ -289,25 +271,47 @@ function getServices() {
     
     if ($isApacheRunning) {
         $confFiles = @glob('/etc/apache2/sites-enabled/*.conf');
-        $apacheSites = [];
+        $foundApache = false;
         if ($confFiles) {
             foreach ($confFiles as $file) {
                 $content = @file_get_contents($file);
                 if ($content && preg_match('/^\s*ServerName\s+([^\s]+)/m', $content, $m)) {
-                    $apacheSites[] = $m[1];
+                    $services['websites'][] = ['name' => $m[1], 'status' => 'Running', 'type' => 'apache'];
+                    $foundApache = true;
                 }
             }
         }
-        
-        if (empty($apacheSites)) {
-            $services['apache'][] = ['name' => 'Default Site', 'status' => 'Running'];
-        } else {
-            foreach ($apacheSites as $site) {
-                $services['apache'][] = ['name' => $site, 'status' => 'Running'];
+        if (!$foundApache) {
+            $services['websites'][] = ['name' => 'Default Site', 'status' => 'Running', 'type' => 'apache'];
+        }
+    }
+    
+    // Nginx
+    @exec('systemctl is-active nginx 2>/dev/null', $nginxStatus);
+    $isNginxRunning = (!empty($nginxStatus) && trim($nginxStatus[0]) === 'active');
+    
+    if ($isNginxRunning) {
+        $confFiles = @glob('/etc/nginx/sites-enabled/*');
+        $foundNginx = false;
+        if ($confFiles) {
+            foreach ($confFiles as $file) {
+                $content = @file_get_contents($file);
+                if ($content && preg_match('/^\s*server_name\s+([^;]+);/m', $content, $m)) {
+                    $names = explode(' ', trim($m[1]));
+                    if ($names[0] !== '_' && $names[0] !== '') {
+                        $services['websites'][] = ['name' => $names[0], 'status' => 'Running', 'type' => 'nginx'];
+                        $foundNginx = true;
+                    }
+                }
             }
         }
-    } else {
-        $services['apache'][] = ['name' => 'Apache Web Server', 'status' => 'Stopped'];
+        if (!$foundNginx) {
+            $services['websites'][] = ['name' => 'Default Site', 'status' => 'Running', 'type' => 'nginx'];
+        }
+    }
+    
+    if (empty($services['websites'])) {
+        $services['websites'][] = ['name' => 'Not Detected', 'status' => '-', 'type' => ''];
     }
     
     return $services;
@@ -570,8 +574,8 @@ if (file_exists('/etc/os-release')) {
             <!-- Services Card -->
             <div class="card card-list">
                 <div class="card-titles" style="margin-bottom: 15px;">
-                    <span class="sub-title ram-color">SERVICES & WEBSITES</span>
-                    <h2>Status</h2>
+                    <span class="sub-title ram-color">ACTIVE</span>
+                    <h2>Websites</h2>
                 </div>
                 <div class="list-container" id="services-list">
                     <div class="list-item">Loading...</div>
