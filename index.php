@@ -257,8 +257,7 @@ if (file_exists('/etc/os-release')) {
                     </div>
                     <div class="card-titles">
                         <span class="sub-title cpu-color">PROCESSOR</span>
-                        <h2>CPU</h2>
-                        <span class="spec-text" id="cpu-spec">Loading...</span>
+                        <h2 id="cpu-spec">Loading...</h2>
                     </div>
                     <div class="card-temp">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="icon-sm">
