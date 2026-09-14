@@ -381,9 +381,13 @@ body::after {
 
 .mini-chart .bar {
     width: 6px;
-    background: #c084fc;
     border-radius: 3px;
+    background: #c084fc; /* fallback */
 }
+.cpu-chart .bar { background: var(--cpu-color); }
+.ram-chart .bar { background: var(--ram-color); }
+.swap-chart .bar { background: var(--swap-color); }
+.storage-chart .bar { background: var(--storage-color); }
 .mini-chart .h-2 { height: 40%; }
 .mini-chart .h-4 { height: 80%; }
 .mini-chart .h-3 { height: 60%; }
