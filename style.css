@@ -179,7 +179,13 @@ body::after {
     font-size: 0.8rem;
     color: var(--text-muted);
     font-weight: 600;
-    margin-top: 4px;
+}
+
+.home-indicators {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-top: 10px;
 }
 
 .uptime svg {
@@ -490,6 +496,21 @@ body::after {
 }
 
 @media (min-width: 768px) {
+    .home-indicators {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 15px;
+    }
+    .home-indicators .badge-ip,
+    .home-indicators .uptime {
+        font-size: 0.95rem;
+    }
+    .home-indicators .icon-sm,
+    .home-indicators .icon-xs {
+        width: 18px;
+        height: 18px;
+    }
     .dashboard {
         max-width: 800px;
     }
