@@ -315,7 +315,6 @@ if (file_exists('/etc/os-release')) {
                             <span class="percentage" id="disk-percent">0%</span>
                             <span class="status-badge badge-storage" id="disk-status">ULTRA ROOMY</span>
                         </div>
-                        <div class="stat-desc">SSD Pool #0</div>
                     </div>
                     <div class="progress-container">
                         <div class="progress-bar-bg">
