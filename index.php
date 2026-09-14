@@ -560,17 +560,6 @@ if (file_exists('/etc/os-release')) {
                 </div>
             </div>
 
-            <!-- Top Processes Card -->
-            <div class="card card-list">
-                <div class="card-titles" style="margin-bottom: 15px;">
-                    <span class="sub-title cpu-color">REAL-TIME</span>
-                    <h2>Top Processes</h2>
-                </div>
-                <div class="list-container" id="top-processes-list">
-                    <div class="list-item">Loading...</div>
-                </div>
-            </div>
-
             <!-- Services Card -->
             <div class="card card-list">
                 <div class="card-titles" style="margin-bottom: 15px;">
@@ -578,6 +567,17 @@ if (file_exists('/etc/os-release')) {
                     <h2>Websites</h2>
                 </div>
                 <div class="list-container" id="services-list">
+                    <div class="list-item">Loading...</div>
+                </div>
+            </div>
+
+            <!-- Top Processes Card -->
+            <div class="card card-list">
+                <div class="card-titles" style="margin-bottom: 15px;">
+                    <span class="sub-title cpu-color">REAL-TIME</span>
+                    <h2>Top Processes</h2>
+                </div>
+                <div class="list-container" id="top-processes-list">
                     <div class="list-item">Loading...</div>
                 </div>
             </div>

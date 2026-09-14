@@ -118,10 +118,9 @@ function updateUI(data) {
         if (data.services.websites) {
             data.services.websites.forEach(srv => {
                 const color = srv.status === 'Running' ? 'var(--ram-color)' : 'var(--text-muted)';
-                const typeHtml = srv.type ? `<span style="font-size:0.75rem;color:var(--text-muted);">${srv.type}</span>` : '';
                 srvList.innerHTML += `
                     <div class="list-item">
-                        <span class="item-name">${srv.name} ${typeHtml}</span>
+                        <span class="item-name">${srv.name}</span>
                         <span class="item-value" style="color: ${color};">${srv.status}</span>
                     </div>
                 `;
