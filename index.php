@@ -238,21 +238,45 @@ function getNetworkStats() {
 
 // Function to get Top Processes
 function getTopProcesses() {
-    @exec('ps -eo comm,%cpu,%mem --sort=-%cpu | head -n 6', $lines);
+    $cpuinfo = @file_get_contents('/proc/cpuinfo');
+    $cores = 1;
+    if ($cpuinfo && preg_match_all('/^processor/m', $cpuinfo, $matches)) {
+        $cores = count($matches[0]) ?: 1;
+    }
+
+    @exec('ps -eo comm,%cpu,%mem --sort=-%cpu', $lines);
     $processes = [];
     if (!empty($lines) && count($lines) > 1) {
         for ($i = 1; $i < count($lines); $i++) {
             $line = trim($lines[$i]);
+            if (empty($line)) continue;
+            
             $parts = preg_split('/\s+/', $line);
             if (count($parts) >= 3) {
                 $mem = array_pop($parts);
                 $cpu = array_pop($parts);
                 $comm = implode(' ', $parts);
+                
+                // Abaikan proses yang berjalan hanya untuk mengambil statistik
+                if (in_array($comm, ['ps', 'top', 'bash', 'sh'])) {
+                    continue;
+                }
+                
+                // Normalisasi penggunaan CPU berdasarkan jumlah core
+                $normalizedCpu = round((float)$cpu / $cores, 1);
+                
+                // Batasi maksimum 100% untuk menghindari anomali perhitungan ps pada Linux
+                if ($normalizedCpu > 100) $normalizedCpu = 100;
+                
                 $processes[] = [
                     'name' => $comm,
-                    'cpu' => $cpu,
+                    'cpu' => $normalizedCpu,
                     'mem' => $mem
                 ];
+                
+                if (count($processes) >= 5) {
+                    break;
+                }
             }
         }
     }
