@@ -37,7 +37,7 @@ function getCpuSpec() {
         if (preg_match_all('/^processor/m', $cpuinfo, $matches)) {
             $cores = count($matches[0]);
         }
-        return "$model ($cores CPU)";
+        return "$model ($cores Core)";
     }
     return "Unknown CPU";
 }
