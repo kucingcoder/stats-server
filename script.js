@@ -17,10 +17,11 @@ function formatPercent(p) {
 }
 
 function getStatusBadge(type, percent) {
-    if (percent < 30) return { text: 'FREE', class: '' };
-    if (percent < 70) return { text: 'OPTIMAL', class: '' };
-    if (percent < 90) return { text: 'CROWDED', class: '' };
-    return { text: 'FULL', class: '' };
+    if (percent === 0) return { text: 'FREE', class: '' };
+    if (percent < 30) return { text: 'LIGHT', class: '' };
+    if (percent < 70) return { text: 'GOOD', class: '' };
+    if (percent < 90) return { text: 'WARN', class: '' };
+    return { text: 'MAX', class: '' };
 }
 
 function updateUI(data) {
