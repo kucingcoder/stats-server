@@ -598,8 +598,8 @@ if (file_exists('/etc/os-release')) {
             <!-- Top Processes Card -->
             <div class="card card-list">
                 <div class="card-titles" style="margin-bottom: 15px;">
-                    <span class="sub-title cpu-color">REAL-TIME</span>
-                    <h2>Top Processes</h2>
+                    <span class="sub-title cpu-color">Top 5 Process</span>
+                    <h2>Running System</h2>
                 </div>
                 <div class="list-container" id="top-processes-list">
                     <div class="list-item">Loading...</div>
