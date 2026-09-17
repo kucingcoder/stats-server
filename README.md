@@ -64,6 +64,16 @@ For those who want to tweak the code or customize the design, this project is bu
 - **`style.css`**: Contains all styling, layouts, colors, and animations (glassmorphism effects, floating robot, etc.).
 - **`script.js`**: JavaScript logic that polls `index.php?api=true` every 2 seconds to update the numbers on the screen dynamically without refreshing the page.
 
+## 🔒 Security & Password Protection
+
+By default, this dashboard is protected with a built-in login system. 
+- **Default Password:** `admin`
+- **To change the password or disable it:** Open `index.php` and change the value of `$APP_PASSWORD` at the very top of the file (line 3). 
+  - Change it to your own secure password: `$APP_PASSWORD = 'mysecretpassword';`
+  - Or, set it to an empty string to disable the login screen completely: `$APP_PASSWORD = '';`
+
+*Note: Even with this password protection, it is still recommended to use this dashboard over a secure connection (HTTPS or VPN) to prevent the password from being intercepted on public networks.*
+
 **Customization Tips:**
 - To change the dominant colors, open `style.css` and look for the `:root { ... }` block at the very top.
 - To change the refresh interval, open `script.js` and modify the `const REFRESH_RATE = 2000;` (in milliseconds).

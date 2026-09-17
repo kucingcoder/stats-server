@@ -1,4 +1,100 @@
 <?php
+session_start();
+$APP_PASSWORD = 'admin'; // Set to empty string '' to disable password protection
+
+if ($APP_PASSWORD !== '') {
+    if (isset($_GET['logout'])) {
+        session_destroy();
+        header("Location: index.php");
+        exit;
+    }
+    if (isset($_POST['password'])) {
+        if ($_POST['password'] === $APP_PASSWORD) {
+            $_SESSION['authenticated'] = true;
+            header("Location: index.php");
+            exit;
+        } else {
+            $login_error = "Sandi salah!";
+        }
+    }
+    if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
+        // Output login page
+        ?>
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Login - Server Stats</title>
+            <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+            <link rel="stylesheet" href="style.css?v=<?= time() ?>">
+            <style>
+                .login-container {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    min-height: 100vh;
+                    width: 100%;
+                }
+                .login-card {
+                    background: var(--card-bg);
+                    border: 1px solid var(--card-border);
+                    border-radius: 20px;
+                    padding: 30px;
+                    width: 100%;
+                    max-width: 350px;
+                    text-align: center;
+                    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+                    backdrop-filter: blur(10px);
+                    -webkit-backdrop-filter: blur(10px);
+                }
+                .login-card h2 { margin-bottom: 20px; font-weight: 800; }
+                .login-input {
+                    width: 100%;
+                    padding: 12px 15px;
+                    margin-bottom: 15px;
+                    border-radius: 10px;
+                    border: 1px solid rgba(255, 255, 255, 0.1);
+                    background: rgba(0, 0, 0, 0.2);
+                    color: white;
+                    font-family: inherit;
+                    outline: none;
+                }
+                .login-input:focus { border-color: var(--primary-color); }
+                .login-btn {
+                    width: 100%;
+                    padding: 12px;
+                    border-radius: 10px;
+                    border: none;
+                    background: var(--primary-color);
+                    color: white;
+                    font-family: inherit;
+                    font-weight: 700;
+                    cursor: pointer;
+                    transition: 0.3s ease;
+                }
+                .login-btn:hover { background: #0284c7; }
+                .error-msg { color: #f43f5e; font-size: 0.9rem; margin-bottom: 10px; }
+            </style>
+        </head>
+        <body>
+            <div class="bg-pattern"></div>
+            <div class="bg-grid"></div>
+            <div class="login-container">
+                <form class="login-card" method="POST" action="">
+                    <h2>🔒 Security</h2>
+                    <?php if (isset($login_error)) echo "<div class='error-msg'>$login_error</div>"; ?>
+                    <input type="password" name="password" class="login-input" placeholder="Enter Password" required autofocus>
+                    <button type="submit" class="login-btn">Login</button>
+                </form>
+            </div>
+        </body>
+        </html>
+        <?php
+        exit;
+    }
+}
+
 // Function to get CPU usage
 function getCpuUsage() {
     $stat1 = @file('/proc/stat');
@@ -615,6 +711,11 @@ if (file_exists('/etc/os-release')) {
                 </svg>
                 GitHub Project
             </a>
+            <?php if (isset($APP_PASSWORD) && $APP_PASSWORD !== ''): ?>
+            <a href="?logout=true" class="github-btn" style="background: rgba(244, 63, 94, 0.1); border-color: rgba(244, 63, 94, 0.2); color: #f43f5e; margin-left: 10px;">
+                Logout
+            </a>
+            <?php endif; ?>
         </footer>
     </div>
 
