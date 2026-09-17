@@ -115,7 +115,20 @@ function updateUI(data) {
         const srvList = document.getElementById('services-list');
         srvList.innerHTML = '';
         
-        if (data.services.websites) {
+        if (data.services.websites && data.services.websites.length > 0) {
+            let webServerName = 'Websites';
+            const firstType = data.services.websites[0].type;
+            if (firstType === 'apache') {
+                webServerName = 'Apache';
+            } else if (firstType === 'nginx') {
+                webServerName = 'Nginx';
+            }
+            
+            const titleEl = document.getElementById('webserver-title');
+            if (titleEl) {
+                titleEl.innerText = webServerName;
+            }
+
             data.services.websites.forEach(srv => {
                 const color = srv.status === 'Running' ? 'var(--ram-color)' : 'var(--text-muted)';
                 let nameHtml = srv.name;
