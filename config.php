@@ -1,4 +1,4 @@
 <?php
-// Konfigurasi Sandi (Password)
-// Set dengan sandi yang Anda inginkan. Biarkan kosong ('') jika ingin mematikan fitur login.
+// Password Configuration
+// Set your desired password here. Leave empty ('') to disable the login feature.
 $APP_PASSWORD = 'admin';

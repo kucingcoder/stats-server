@@ -17,7 +17,7 @@ if ($APP_PASSWORD !== '') {
             header("Location: index.php");
             exit;
         } else {
-            $login_error = "Sandi salah!";
+            $login_error = "Invalid password!";
         }
     }
     if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
@@ -356,15 +356,15 @@ function getTopProcesses() {
                 $cpu = array_pop($parts);
                 $comm = implode(' ', $parts);
                 
-                // Abaikan proses yang berjalan hanya untuk mengambil statistik
+                // Ignore processes running only to fetch statistics
                 if (in_array($comm, ['ps', 'top', 'bash', 'sh'])) {
                     continue;
                 }
                 
-                // Normalisasi penggunaan CPU berdasarkan jumlah core
+                // Normalize CPU usage based on core count
                 $normalizedCpu = round((float)$cpu / $cores, 1);
                 
-                // Batasi maksimum 100% untuk menghindari anomali perhitungan ps pada Linux
+                // Cap at 100% to avoid Linux ps timing anomalies
                 if ($normalizedCpu > 100) $normalizedCpu = 100;
                 
                 $processes[] = [
