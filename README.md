@@ -68,7 +68,7 @@ For those who want to tweak the code or customize the design, this project is bu
 
 By default, this dashboard is protected with a built-in login system. 
 - **Default Password:** `admin`
-- **To change the password or disable it:** Open `index.php` and change the value of `$APP_PASSWORD` at the very top of the file (line 3). 
+- **To change the password or disable it:** Open `config.php` and change the value of `$APP_PASSWORD`. 
   - Change it to your own secure password: `$APP_PASSWORD = 'mysecretpassword';`
   - Or, set it to an empty string to disable the login screen completely: `$APP_PASSWORD = '';`
 

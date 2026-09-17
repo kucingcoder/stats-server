@@ -1,7 +1,10 @@
 <?php
 session_start();
-$APP_PASSWORD = 'admin'; // Set to empty string '' to disable password protection
 
+$APP_PASSWORD = 'admin'; // Default password
+if (file_exists(__DIR__ . '/config.php')) {
+    require_once __DIR__ . '/config.php';
+}
 if ($APP_PASSWORD !== '') {
     if (isset($_GET['logout'])) {
         session_destroy();
