@@ -1,57 +1,71 @@
 # Stats Server Dashboard
 
-Sebuah dashboard pemantauan server (*server monitoring*) yang ringan, cantik, dan *real-time*. Proyek ini dibuat khusus untuk para **Homelab Enthusiast** dan siapa saja yang ingin memantau kondisi server atau mini PC mereka dari browser dengan tampilan yang modern.
+A lightweight, beautiful, and real-time server monitoring dashboard. This project is built specifically for **Homelab Enthusiasts** and anyone who wants to monitor their server or mini PC's status directly from a web browser with a modern interface.
 
-![Stats Server Preview](https://via.placeholder.com/800x400?text=Preview+Dashboard)
-
-## 📌 Apa Saja yang Ditampilkan?
-- **CPU / Prosesor**: Pemakaian prosesor saat ini, spesifikasi, dan suhu.
-- **Memori (RAM & Swap)**: Sisa kapasitas memori untuk memastikan server Anda tidak kepenuhan.
-- **Penyimpanan (Storage)**: Mengetahui sisa ruang hardisk/SSD Anda.
-- **Jaringan (Network)**: Lalu lintas internet masuk (In) dan keluar (Out).
-- **Proses Berjalan**: 5 program/proses yang paling banyak memakan *resource* CPU.
-- **Web Server Aktif**: Otomatis mendeteksi website yang sedang menyala di server Anda (Apache / Nginx).
+## 📌 Features
+- **CPU / Processor**: Current CPU usage, specifications, and temperature.
+- **Memory (RAM & Swap)**: Real-time memory usage and availability.
+- **Storage**: Disk space monitoring for your main drive.
+- **Network**: Inbound (Rx) and Outbound (Tx) network traffic.
+- **Top 5 Processes**: Real-time list of processes consuming the most CPU resources.
+- **Active Web Servers**: Automatically detects and lists active websites running on your server (Supports Apache and Nginx).
 
 ---
 
-## 🚀 Cara Instalasi (Deploy)
+## 🚀 Deployment (Installation)
 
-Aplikasi ini tidak membutuhkan *database* atau konfigurasi rumit. Sangat cocok untuk pemula!
+This application doesn't require a database or complex configurations. It is plug-and-play and beginner-friendly!
 
-**Persyaratan Sistem:**
-- Sistem Operasi **Linux** (misal: Ubuntu, Debian, Proxmox LXC, dll). *Tidak akan berfungsi penuh di Windows karena bergantung pada sistem file Linux.*
-- Web Server (Apache, Nginx, atau sejenisnya).
-- PHP (Versi 7.4 atau yang lebih baru).
+**System Requirements:**
+- **Linux** Operating System (e.g., Ubuntu, Debian, Proxmox LXC, etc.). *Will not work fully on Windows as it relies on Linux system files.*
+- Web Server (Apache or Nginx).
+- PHP (Version 7.4 or newer).
 
-**Langkah-langkah:**
-1. Pastikan server Anda sudah memiliki web server dan PHP. Jika belum (untuk Ubuntu/Debian), jalankan perintah ini di terminal:
+### Option 1: Using Apache
+1. Ensure your server has Apache and PHP installed. If not (for Ubuntu/Debian), run:
    ```bash
    sudo apt update
    sudo apt install apache2 php libapache2-mod-php
    ```
-2. Unduh (*clone*) kode proyek ini dan letakkan di dalam folder publik web server Anda (biasanya di `/var/www/html`):
+2. Clone this repository to your web server's public directory (usually `/var/www/html`):
    ```bash
    cd /var/www/html
-   # Hapus file index default bawaan apache (jika ada)
+   # Remove default apache index file if it exists
    sudo rm index.html 
    
-   # Clone repositori (Pastikan Anda sudah menginstall git)
+   # Clone the repository
    sudo git clone https://github.com/kucingcoder/stats-server.git .
    ```
-3. Buka browser Anda dan masukkan IP Address server Anda (misal: `http://192.168.1.100`). Dashboard Anda sudah bisa digunakan!
+
+### Option 2: Using Nginx
+1. Ensure your server has Nginx and PHP-FPM installed:
+   ```bash
+   sudo apt update
+   sudo apt install nginx php-fpm
+   ```
+2. Make sure your Nginx server block is configured to process `.php` files via `php-fpm`.
+3. Clone the repository to your web root (e.g., `/var/www/html`):
+   ```bash
+   cd /var/www/html
+   sudo rm index.nginx-debian.html
+   sudo git clone https://github.com/kucingcoder/stats-server.git .
+   ```
+
+**Accessing the Dashboard:**
+Once deployed, simply open your web browser and navigate to your server's IP address (e.g., `http://192.168.1.100`). Your dashboard is ready to use!
 
 ---
 
-## 🛠️ Cara Pengembangan (Development)
+## 🛠️ Development
 
-Bagi Anda yang ingin mengutak-atik kode atau mengubah desainnya, proyek ini dibuat sangat sederhana (Vanilla) tanpa menggunakan *framework* rumit.
+For those who want to tweak the code or customize the design, this project is built using Vanilla PHP, JS, and CSS without any complex frameworks.
 
-- **`index.php`**: Ini adalah jantung aplikasi. File ini berfungsi sebagai tampilan halaman muka (HTML) sekaligus bertindak sebagai *backend* API. Jika file ini diakses dengan link `index.php?api=true`, file ini akan membaca status dari server Linux (seperti dari folder `/proc`) dan mengembalikan data berformat JSON.
-- **`style.css`**: Semua kode warna, tata letak (*layout*), dan animasi (efek *glassmorphism*, robot melayang, dll) diatur di sini.
-- **`script.js`**: Kode JavaScript yang bertugas meminta data terbaru ke `index.php?api=true` setiap 2 detik dan langsung memperbarui angka di layar tanpa perlu me-*refresh* halaman.
+- **`index.php`**: The heart of the application. It serves as both the frontend (HTML) and the backend API. When accessed with `index.php?api=true`, it reads Linux system metrics (like from `/proc`) and returns JSON data.
+- **`style.css`**: Contains all styling, layouts, colors, and animations (glassmorphism effects, floating robot, etc.).
+- **`script.js`**: JavaScript logic that polls `index.php?api=true` every 2 seconds to update the numbers on the screen dynamically without refreshing the page.
 
-**Tips Modifikasi:**
-- Jika ingin mengganti warna dominan, buka `style.css` dan cari bagian `:root { ... }` di bagian paling atas.
-- Jika ingin mengubah interval *refresh*, buka `script.js` dan ubah angka pada `const REFRESH_RATE = 2000;` (dalam milidetik).
+**Customization Tips:**
+- To change the dominant colors, open `style.css` and look for the `:root { ... }` block at the very top.
+- To change the refresh interval, open `script.js` and modify the `const REFRESH_RATE = 2000;` (in milliseconds).
 
 ---
