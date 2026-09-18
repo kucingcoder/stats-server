@@ -715,7 +715,7 @@ if (file_exists('/etc/os-release')) {
             <!-- Support System Card -->
             <div class="card card-list">
                 <div class="card-titles" style="margin-bottom: 15px;">
-                    <span class="sub-title ram-color">SERVICE</span>
+                    <span class="sub-title" style="color: var(--primary-color);">SERVICE</span>
                     <h2>Support System</h2>
                 </div>
                 <div class="list-container" id="support-services-list">

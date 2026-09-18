@@ -191,7 +191,7 @@ function updateUI(data) {
                 supportList.innerHTML += `
                     <div class="list-item">
                         <span class="item-name">${nameHtml}</span>
-                        <span class="item-value" style="color: var(--ram-color);">${domainHtml}</span>
+                        <span class="item-value" style="color: var(--primary-color);">${domainHtml}</span>
                     </div>
                 `;
             });
