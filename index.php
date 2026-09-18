@@ -440,6 +440,23 @@ function getServices() {
     return $services;
 }
 
+// Function to get Registered Services
+function getRegisteredServices() {
+    $file = __DIR__ . '/registered-services.json';
+    if (file_exists($file)) {
+        $content = @file_get_contents($file);
+        $data = @json_decode($content, true);
+        if (is_array($data)) {
+            // Sort by name
+            usort($data, function($a, $b) {
+                return strcasecmp($a['name'] ?? '', $b['name'] ?? '');
+            });
+            return $data;
+        }
+    }
+    return [];
+}
+
 if (isset($_GET['api']) && $_GET['api'] == 'true') {
     header('Content-Type: application/json');
     echo json_encode([
@@ -455,7 +472,8 @@ if (isset($_GET['api']) && $_GET['api'] == 'true') {
         'disk' => getDisk(),
         'network' => getNetworkStats(),
         'top_processes' => getTopProcesses(),
-        'services' => getServices()
+        'services' => getServices(),
+        'registered_services' => getRegisteredServices()
     ]);
     exit;
 }
@@ -690,6 +708,17 @@ if (file_exists('/etc/os-release')) {
                     <h2 id="webserver-title">Websites</h2>
                 </div>
                 <div class="list-container" id="services-list">
+                    <div class="list-item">Loading...</div>
+                </div>
+            </div>
+
+            <!-- Support System Card -->
+            <div class="card card-list">
+                <div class="card-titles" style="margin-bottom: 15px;">
+                    <span class="sub-title ram-color">SERVICE</span>
+                    <h2>Support System</h2>
+                </div>
+                <div class="list-container" id="support-services-list">
                     <div class="list-item">Loading...</div>
                 </div>
             </div>

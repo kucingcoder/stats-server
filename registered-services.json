@@ -1,0 +1,10 @@
+[
+    {
+        "name": "Panel",
+        "domain": "panel.domain.tld"
+    },
+    {
+        "name": "Webmail",
+        "domain": "mail.domain.tld"
+    }
+]

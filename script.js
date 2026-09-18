@@ -177,6 +177,28 @@ function updateUI(data) {
             });
         }
     }
+    // Update Registered Services (Support System)
+    if (data.registered_services && document.getElementById('support-services-list')) {
+        const supportList = document.getElementById('support-services-list');
+        supportList.innerHTML = '';
+        if (data.registered_services.length > 0) {
+            data.registered_services.forEach(srv => {
+                let nameHtml = srv.name;
+                if (srv.domain) {
+                    nameHtml = `<a href="http://${srv.domain}" target="_blank" style="color: inherit; text-decoration: none;" onmouseover="this.style.textDecoration='underline'; this.style.color='#38bdf8';" onmouseout="this.style.textDecoration='none'; this.style.color='inherit';">${srv.name}</a>`;
+                }
+                const domainHtml = srv.domain || '';
+                supportList.innerHTML += `
+                    <div class="list-item">
+                        <span class="item-name">${nameHtml}</span>
+                        <span class="item-value" style="color: var(--ram-color);">${domainHtml}</span>
+                    </div>
+                `;
+            });
+        } else {
+             supportList.innerHTML = '<div class="list-item"><span class="item-name" style="color: var(--text-muted);">No services registered</span></div>';
+        }
+    }
 }
 
 // Initial fetch
