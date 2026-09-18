@@ -161,7 +161,7 @@ function updateUI(data) {
                 let rootDomain = srv.name;
                 
                 if (srv.name !== 'Not Detected' && srv.name !== 'Default Site') {
-                    nameHtml = `<a href="http://${srv.name}" target="_blank" style="color: inherit; text-decoration: none;" onmouseover="this.style.textDecoration='underline'; this.style.color='#38bdf8';" onmouseout="this.style.textDecoration='none'; this.style.color='inherit';">${srv.name}</a>`;
+                    nameHtml = `<a href="https://${srv.name}" target="_blank" style="color: inherit; text-decoration: none;" onmouseover="this.style.textDecoration='underline'; this.style.color='#38bdf8';" onmouseout="this.style.textDecoration='none'; this.style.color='inherit';">${srv.name}</a>`;
                     rootDomain = getRootDomain(srv.name);
                 }
 
@@ -183,15 +183,16 @@ function updateUI(data) {
         supportList.innerHTML = '';
         if (data.registered_services.length > 0) {
             data.registered_services.forEach(srv => {
-                let nameHtml = srv.name;
+                let leftHtml = srv.domain || 'N/A';
                 if (srv.domain) {
-                    nameHtml = `<a href="http://${srv.domain}" target="_blank" style="color: inherit; text-decoration: none;" onmouseover="this.style.textDecoration='underline'; this.style.color='#38bdf8';" onmouseout="this.style.textDecoration='none'; this.style.color='inherit';">${srv.name}</a>`;
+                    leftHtml = `<a href="https://${srv.domain}" target="_blank" style="color: inherit; text-decoration: none;" onmouseover="this.style.textDecoration='underline'; this.style.color='#38bdf8';" onmouseout="this.style.textDecoration='none'; this.style.color='inherit';">${srv.domain}</a>`;
                 }
-                const domainHtml = srv.domain || '';
+                const rightHtml = srv.name || '';
+                
                 supportList.innerHTML += `
                     <div class="list-item">
-                        <span class="item-name">${nameHtml}</span>
-                        <span class="item-value" style="color: var(--primary-color);">${domainHtml}</span>
+                        <span class="item-name">${leftHtml}</span>
+                        <span class="item-value" style="color: var(--primary-color);">${rightHtml}</span>
                     </div>
                 `;
             });
