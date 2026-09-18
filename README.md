@@ -9,6 +9,7 @@ A lightweight, beautiful, and real-time server monitoring dashboard. This projec
 - **Network**: Inbound (Rx) and Outbound (Tx) network traffic.
 - **Top 5 Processes**: Real-time list of processes consuming the most CPU resources.
 - **Active Web Servers**: Automatically detects and lists active websites running on your server (Supports Apache and Nginx).
+- **Support System**: Manually register and display static links or services via a simple JSON file.
 
 ---
 
@@ -53,6 +54,28 @@ This application doesn't require a database or complex configurations. It is plu
 
 **Accessing the Dashboard:**
 Once deployed, simply open your web browser and navigate to your server's IP address (e.g., `http://192.168.1.100`). Your dashboard is ready to use!
+
+---
+
+## 📝 Custom Services Configuration (Support System)
+
+You can manually add custom services or panels to the **Support System** card on the dashboard.
+To do this, simply edit or create a file named `registered-services.json` in the root directory. 
+
+The format is a simple JSON array:
+```json
+[
+    {
+        "name": "Panel",
+        "domain": "panel.domain.tld"
+    },
+    {
+        "name": "Webmail",
+        "domain": "mail.domain.tld"
+    }
+]
+```
+*The list will automatically be sorted alphabetically by the service name.*
 
 ---
 
