@@ -24,6 +24,21 @@ function getStatusBadge(type, percent) {
     return { text: 'MAX', class: '' };
 }
 
+function getRootDomain(hostname) {
+    if (hostname === 'Not Detected' || hostname === 'Default Site') return hostname;
+    const parts = hostname.split('.');
+    if (parts.length <= 2) return hostname;
+    
+    // Daftar TLD 2 bagian yang umum di Indonesia
+    const twoPartTlds = ['co.id', 'web.id', 'or.id', 'ac.id', 'sch.id', 'biz.id', 'desa.id', 'go.id', 'mil.id', 'my.id', 'co.uk', 'org.uk', 'net.id'];
+    const lastTwo = parts.slice(-2).join('.');
+    
+    if (twoPartTlds.includes(lastTwo) && parts.length >= 3) {
+        return parts.slice(-3).join('.');
+    }
+    return parts.slice(-2).join('.');
+}
+
 function updateUI(data) {
     // Update Home
     if(document.getElementById('ip-display')) document.getElementById('ip-display').innerText = data.ip;
@@ -130,16 +145,33 @@ function updateUI(data) {
                 titleEl.innerText = webServerName;
             }
 
+            // Urutkan berdasarkan root domain (domain utama) lalu subdomain
+            data.services.websites.sort((a, b) => {
+                const rootA = getRootDomain(a.name);
+                const rootB = getRootDomain(b.name);
+                if (rootA === rootB) {
+                    return a.name.localeCompare(b.name);
+                }
+                return rootA.localeCompare(rootB);
+            });
+
             data.services.websites.forEach(srv => {
                 const color = srv.status === 'Running' ? 'var(--ram-color)' : 'var(--text-muted)';
                 let nameHtml = srv.name;
+                let rootDomain = srv.name;
+                
                 if (srv.name !== 'Not Detected' && srv.name !== 'Default Site') {
                     nameHtml = `<a href="http://${srv.name}" target="_blank" style="color: inherit; text-decoration: none;" onmouseover="this.style.textDecoration='underline'; this.style.color='#38bdf8';" onmouseout="this.style.textDecoration='none'; this.style.color='inherit';">${srv.name}</a>`;
+                    rootDomain = getRootDomain(srv.name);
                 }
+
+                // Ganti kata 'Running' dengan root domain-nya
+                const displayStatus = (srv.status === 'Running') ? rootDomain : srv.status;
+
                 srvList.innerHTML += `
                     <div class="list-item">
                         <span class="item-name">${nameHtml}</span>
-                        <span class="item-value" style="color: ${color};">${srv.status}</span>
+                        <span class="item-value" style="color: ${color};">${displayStatus}</span>
                     </div>
                 `;
             });
