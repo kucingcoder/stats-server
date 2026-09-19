@@ -343,10 +343,11 @@ function getTopProcesses() {
         $cores = count($matches[0]) ?: 1;
     }
 
-    @exec('ps -eo comm,%cpu,%mem --sort=-%cpu', $lines);
+    $cmd = 'top -b -n 2 -d 0.1 | awk \'/PID USER/ {delete a; i=0; next} {if ($0 ~ /^[ 0-9]/) a[i++]=$0} END {for(j=0;j<i;j++) print a[j]}\' | awk \'{print $12, $9, $10}\'';
+    @exec($cmd, $lines);
     $processes = [];
-    if (!empty($lines) && count($lines) > 1) {
-        for ($i = 1; $i < count($lines); $i++) {
+    if (!empty($lines)) {
+        for ($i = 0; $i < count($lines); $i++) {
             $line = trim($lines[$i]);
             if (empty($line)) continue;
             
@@ -357,7 +358,7 @@ function getTopProcesses() {
                 $comm = implode(' ', $parts);
                 
                 // Ignore processes running only to fetch statistics
-                if (in_array($comm, ['ps', 'top', 'bash', 'sh'])) {
+                if (in_array($comm, ['ps', 'top', 'bash', 'sh', 'awk'])) {
                     continue;
                 }
                 
