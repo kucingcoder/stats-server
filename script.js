@@ -46,28 +46,6 @@ function updateUI(data) {
     if(document.getElementById('net-rx') && data.network) document.getElementById('net-rx').innerText = data.network.rx + ' In';
     if(document.getElementById('net-tx') && data.network) document.getElementById('net-tx').innerText = data.network.tx + ' Out';
 
-    // Update Cloudflared
-    if (data.cloudflared && data.cloudflared.installed) {
-        const cfBadge = document.getElementById('cf-tunnel-badge');
-        const cfStatus = document.getElementById('cf-tunnel-status');
-        if (cfBadge && cfStatus) {
-            cfBadge.style.display = 'flex';
-            if (data.cloudflared.status === 'Running') {
-                cfBadge.style.color = '#38bdf8'; // Blue for Cloudflare
-                let statusText = 'Tunnel Active';
-                if (data.cloudflared.tunnel_id && data.cloudflared.tunnel_id !== 'Unknown') {
-                    statusText = 'ID: ' + data.cloudflared.tunnel_id.substring(0, 8);
-                    cfBadge.title = 'Tunnel ID: ' + data.cloudflared.tunnel_id;
-                }
-                cfStatus.innerText = statusText;
-            } else {
-                cfBadge.style.color = 'var(--text-muted)';
-                cfStatus.innerText = 'Tunnel Stopped';
-                cfBadge.title = '';
-            }
-        }
-    }
-
     // Update CPU
     if(document.getElementById('cpu-spec')) document.getElementById('cpu-spec').innerText = data.cpu.spec;
     if(document.getElementById('cpu-temp')) {

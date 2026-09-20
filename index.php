@@ -433,48 +433,6 @@ function getRegisteredServices() {
     return [];
 }
 
-// Function to get Cloudflared Status
-function getCloudflaredStatus() {
-    $installed = false;
-    if (file_exists('/usr/bin/cloudflared') || file_exists('/usr/local/bin/cloudflared')) {
-        $installed = true;
-    } else {
-        @exec('command -v cloudflared', $cmdCheck);
-        if (!empty($cmdCheck)) $installed = true;
-    }
-    
-    if (!$installed) return ['installed' => false, 'status' => 'Not Installed'];
-    
-    @exec('systemctl is-active cloudflared 2>/dev/null', $serviceStatus);
-    $isRunning = (!empty($serviceStatus) && trim($serviceStatus[0]) === 'active');
-    
-    if (!$isRunning) {
-        @exec('pgrep -x cloudflared', $pid);
-        if (!empty($pid)) $isRunning = true;
-    }
-    
-    if ($isRunning) {
-        $tunnelId = 'Unknown';
-        @exec('ps aux | grep cloudflared | grep -v grep', $psLines);
-        foreach ($psLines as $line) {
-            if (preg_match('/(?:--token|token)\s+([A-Za-z0-9+\/=_~-]+)/', $line, $matches)) {
-                $token = $matches[1];
-                $decoded = @base64_decode($token);
-                if ($decoded) {
-                    $json = @json_decode($decoded, true);
-                    if ($json && isset($json['t'])) {
-                        $tunnelId = $json['t'];
-                        break;
-                    }
-                }
-            }
-        }
-        return ['installed' => true, 'status' => 'Running', 'tunnel_id' => $tunnelId];
-    }
-    
-    return ['installed' => true, 'status' => 'Stopped'];
-}
-
 if (isset($_GET['api']) && $_GET['api'] == 'true') {
     header('Content-Type: application/json');
     echo json_encode([
@@ -489,7 +447,6 @@ if (isset($_GET['api']) && $_GET['api'] == 'true') {
         'swap' => getSwap(),
         'disk' => getDisk(),
         'network' => getNetworkStats(),
-        'cloudflared' => getCloudflaredStatus(),
         'services' => getServices(),
         'registered_services' => getRegisteredServices()
     ]);
@@ -564,12 +521,6 @@ if (file_exists('/etc/os-release')) {
                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
                             </svg>
                             <span id="net-tx">0 B</span>
-                        </div>
-                        <div class="uptime" id="cf-tunnel-badge" style="display: none; transition: color 0.3s ease;">
-                            <svg class="icon-xs" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
-                            </svg>
-                            <span id="cf-tunnel-status">CF Tunnel</span>
                         </div>
                     </div>
                 </div>
