@@ -57,9 +57,9 @@ function updateUI(data) {
             if (!isNaN(tempValue)) {
                 if (tempValue < 50) {
                     tempContainer.style.color = '#3b82f6'; // Blue
-                } else if (tempValue < 65) {
+                } else if (tempValue < 60) {
                     tempContainer.style.color = '#eab308'; // Yellow
-                } else if (tempValue < 80) {
+                } else if (tempValue < 70) {
                     tempContainer.style.color = '#f97316'; // Orange
                 } else {
                     tempContainer.style.color = '#ef4444'; // Red
