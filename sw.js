@@ -1,10 +1,10 @@
-const CACHE_NAME = 'server-stats-v1';
+const CACHE_NAME = 'server-stats-v2';
 const urlsToCache = [
   './',
   './index.php',
   './style.css',
   './script.js',
-  './icon.jpg'
+  './icon.png'
 ];
 
 self.addEventListener('install', event => {
