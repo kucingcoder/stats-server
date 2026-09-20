@@ -446,13 +446,30 @@ function getCloudflaredStatus() {
     if (!$installed) return ['installed' => false, 'status' => 'Not Installed'];
     
     @exec('systemctl is-active cloudflared 2>/dev/null', $serviceStatus);
-    if (!empty($serviceStatus) && trim($serviceStatus[0]) === 'active') {
-        return ['installed' => true, 'status' => 'Running'];
+    $isRunning = (!empty($serviceStatus) && trim($serviceStatus[0]) === 'active');
+    
+    if (!$isRunning) {
+        @exec('pgrep -x cloudflared', $pid);
+        if (!empty($pid)) $isRunning = true;
     }
     
-    @exec('pgrep -x cloudflared', $pid);
-    if (!empty($pid)) {
-        return ['installed' => true, 'status' => 'Running'];
+    if ($isRunning) {
+        $tunnelId = 'Unknown';
+        @exec('ps aux | grep cloudflared | grep -v grep', $psLines);
+        foreach ($psLines as $line) {
+            if (preg_match('/(?:--token|token)\s+([A-Za-z0-9+\/=_~-]+)/', $line, $matches)) {
+                $token = $matches[1];
+                $decoded = @base64_decode($token);
+                if ($decoded) {
+                    $json = @json_decode($decoded, true);
+                    if ($json && isset($json['t'])) {
+                        $tunnelId = $json['t'];
+                        break;
+                    }
+                }
+            }
+        }
+        return ['installed' => true, 'status' => 'Running', 'tunnel_id' => $tunnelId];
     }
     
     return ['installed' => true, 'status' => 'Stopped'];

@@ -54,10 +54,16 @@ function updateUI(data) {
             cfBadge.style.display = 'flex';
             if (data.cloudflared.status === 'Running') {
                 cfBadge.style.color = '#38bdf8'; // Blue for Cloudflare
-                cfStatus.innerText = 'Tunnel Active';
+                let statusText = 'Tunnel Active';
+                if (data.cloudflared.tunnel_id && data.cloudflared.tunnel_id !== 'Unknown') {
+                    statusText = 'ID: ' + data.cloudflared.tunnel_id.substring(0, 8);
+                    cfBadge.title = 'Tunnel ID: ' + data.cloudflared.tunnel_id;
+                }
+                cfStatus.innerText = statusText;
             } else {
                 cfBadge.style.color = 'var(--text-muted)';
                 cfStatus.innerText = 'Tunnel Stopped';
+                cfBadge.title = '';
             }
         }
     }
