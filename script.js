@@ -120,7 +120,7 @@ function updateUI(data) {
             topList.innerHTML += `
                 <div class="list-item">
                     <span class="item-name">${proc.name}</span>
-                    <span class="item-value" style="color: var(--cpu-color);">${proc.cpu}% <span style="font-size:0.75rem;color:var(--text-muted);">CPU</span></span>
+                    <span class="item-value" style="color: #f97316;">${proc.cpu}% <span style="font-size:0.75rem;color:#f97316;opacity:0.8;">CPU</span></span>
                 </div>
             `;
         });
