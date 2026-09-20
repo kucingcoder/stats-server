@@ -458,6 +458,23 @@ function getRegisteredServices() {
     return [];
 }
 
+// Function to get Failed Services
+function getFailedServices() {
+    $cmd = "systemctl list-units --state=failed --no-legend --plain 2>/dev/null | awk '{print $1}'";
+    @exec($cmd, $lines);
+    $failed = [];
+    if (!empty($lines)) {
+        foreach ($lines as $line) {
+            $line = trim($line);
+            if (!empty($line)) {
+                $name = str_replace('.service', '', $line);
+                $failed[] = ['name' => $name, 'status' => 'Failed'];
+            }
+        }
+    }
+    return $failed;
+}
+
 if (isset($_GET['api']) && $_GET['api'] == 'true') {
     header('Content-Type: application/json');
     echo json_encode([
@@ -474,7 +491,8 @@ if (isset($_GET['api']) && $_GET['api'] == 'true') {
         'network' => getNetworkStats(),
         'top_processes' => getTopProcesses(),
         'services' => getServices(),
-        'registered_services' => getRegisteredServices()
+        'registered_services' => getRegisteredServices(),
+        'failed_services' => getFailedServices()
     ]);
     exit;
 }
@@ -720,6 +738,17 @@ if (file_exists('/etc/os-release')) {
                     <h2>Support System</h2>
                 </div>
                 <div class="list-container" id="support-services-list">
+                    <div class="list-item">Loading...</div>
+                </div>
+            </div>
+
+            <!-- Failed Services Card -->
+            <div class="card card-list">
+                <div class="card-titles" style="margin-bottom: 15px;">
+                    <span class="sub-title" style="color: #f43f5e;">ALERT</span>
+                    <h2>Failed Services</h2>
+                </div>
+                <div class="list-container" id="failed-services-list">
                     <div class="list-item">Loading...</div>
                 </div>
             </div>

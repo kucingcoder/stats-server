@@ -200,6 +200,24 @@ function updateUI(data) {
              supportList.innerHTML = '<div class="list-item"><span class="item-name" style="color: var(--text-muted);">No services registered</span></div>';
         }
     }
+
+    // Update Failed Services
+    if (data.failed_services && document.getElementById('failed-services-list')) {
+        const failedList = document.getElementById('failed-services-list');
+        failedList.innerHTML = '';
+        if (data.failed_services.length > 0) {
+            data.failed_services.forEach(srv => {
+                failedList.innerHTML += `
+                    <div class="list-item">
+                        <span class="item-name" style="color: #f43f5e;">${srv.name}</span>
+                        <span class="item-value" style="color: #f43f5e; font-weight: bold;">${srv.status}</span>
+                    </div>
+                `;
+            });
+        } else {
+             failedList.innerHTML = '<div class="list-item"><span class="item-name" style="color: var(--text-muted);">No failed services</span><span class="item-value" style="color: #10b981; font-weight: bold;">All Good</span></div>';
+        }
+    }
 }
 
 // Initial fetch
