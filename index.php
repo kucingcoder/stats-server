@@ -345,53 +345,6 @@ function getNetworkStats() {
     ];
 }
 
-// Function to get Top Processes
-function getTopProcesses() {
-    $cpuinfo = @file_get_contents('/proc/cpuinfo');
-    $cores = 1;
-    if ($cpuinfo && preg_match_all('/^processor/m', $cpuinfo, $matches)) {
-        $cores = count($matches[0]) ?: 1;
-    }
-
-    $cmd = 'top -b -n 2 -d 0.1 | awk \'/PID USER/ {delete a; i=0; next} {if ($0 ~ /^[ 0-9]/) a[i++]=$0} END {for(j=0;j<i;j++) print a[j]}\' | awk \'{print $12, $9, $10}\'';
-    @exec($cmd, $lines);
-    $processes = [];
-    if (!empty($lines)) {
-        for ($i = 0; $i < count($lines); $i++) {
-            $line = trim($lines[$i]);
-            if (empty($line)) continue;
-            
-            $parts = preg_split('/\s+/', $line);
-            if (count($parts) >= 3) {
-                $mem = array_pop($parts);
-                $cpu = array_pop($parts);
-                $comm = implode(' ', $parts);
-                
-                // Ignore processes running only to fetch statistics
-                if (in_array($comm, ['ps', 'top', 'bash', 'sh', 'awk'])) {
-                    continue;
-                }
-                
-                // Normalize CPU usage based on core count
-                $normalizedCpu = round((float)$cpu / $cores, 1);
-                
-                // Cap at 100% to avoid Linux ps timing anomalies
-                if ($normalizedCpu > 100) $normalizedCpu = 100;
-                
-                $processes[] = [
-                    'name' => $comm,
-                    'cpu' => $normalizedCpu,
-                    'mem' => $mem
-                ];
-                
-                if (count($processes) >= 5) {
-                    break;
-                }
-            }
-        }
-    }
-    return $processes;
-}
 
 // Function to get Websites
 function getServices() {
@@ -482,7 +435,6 @@ if (isset($_GET['api']) && $_GET['api'] == 'true') {
         'swap' => getSwap(),
         'disk' => getDisk(),
         'network' => getNetworkStats(),
-        'top_processes' => getTopProcesses(),
         'services' => getServices(),
         'registered_services' => getRegisteredServices()
     ]);
@@ -737,16 +689,6 @@ if (file_exists('/etc/os-release')) {
                 </div>
             </div>
 
-            <!-- Top Processes Card -->
-            <div class="card card-list">
-                <div class="card-titles" style="margin-bottom: 15px;">
-                    <span class="sub-title" style="color: #f97316;">Top 5 Process</span>
-                    <h2>Running System</h2>
-                </div>
-                <div class="list-container" id="top-processes-list">
-                    <div class="list-item">Loading...</div>
-                </div>
-            </div>
 
         </main>
 

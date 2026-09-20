@@ -7,9 +7,8 @@ A lightweight, beautiful, and real-time server monitoring dashboard. This projec
 - **Memory (RAM & Swap)**: Real-time memory usage and availability.
 - **Storage**: Disk space monitoring for your main drive.
 - **Network**: Inbound (Rx) and Outbound (Tx) network traffic.
-- **Top 5 Processes**: Real-time list of processes consuming the most CPU resources.
-- **Active Web Servers**: Automatically detects and lists active websites running on your server (Supports Apache and Nginx).
-- **Support System**: Manually register and display static links or services via a simple JSON file.
+- **Active Web Servers**: Automatically detects and lists active websites running on your server, showing the total count like `(x Sites)` (Supports Apache and Nginx).
+- **Support System**: Manually register and display static links or services via a simple JSON file, showing the total registered apps like `System (x App)`.
 
 ---
 

@@ -112,19 +112,6 @@ function updateUI(data) {
         diskStatusEl.className = `status-badge badge-storage ${diskBadge.class}`;
     }
 
-    // Update Top Processes
-    if (data.top_processes && document.getElementById('top-processes-list')) {
-        const topList = document.getElementById('top-processes-list');
-        topList.innerHTML = '';
-        data.top_processes.forEach(proc => {
-            topList.innerHTML += `
-                <div class="list-item">
-                    <span class="item-name">${proc.name}</span>
-                    <span class="item-value" style="color: #f97316;">${proc.cpu}% <span style="font-size:0.75rem;color:#f97316;opacity:0.8;">CPU</span></span>
-                </div>
-            `;
-        });
-    }
 
     // Update Websites
     if (data.services && document.getElementById('services-list')) {
