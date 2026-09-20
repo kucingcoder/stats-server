@@ -316,10 +316,21 @@ function getIp() {
 function getUptime() {
     $uptime = @file_get_contents('/proc/uptime');
     if ($uptime) {
-        $uptime = explode(' ', $uptime)[0];
+        $uptime = (float) explode(' ', $uptime)[0];
         $days = floor($uptime / 86400);
         $hours = floor(($uptime % 86400) / 3600);
-        return $days . "d " . $hours . "h";
+        $minutes = floor(($uptime % 3600) / 60);
+        
+        $result = [];
+        if ($days > 0) {
+            $result[] = $days . "d";
+        }
+        if ($hours > 0) {
+            $result[] = $hours . "h";
+        }
+        $result[] = $minutes . "min";
+        
+        return implode(" ", $result);
     }
     return 'N/A';
 }
