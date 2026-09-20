@@ -166,7 +166,7 @@ function updateUI(data) {
                 let rootDomain = srv.name;
                 
                 if (srv.name !== 'Not Detected' && srv.name !== 'Default Site') {
-                    nameHtml = `<a href="https://${srv.name}" target="_blank" style="color: #f97316; text-decoration: none;" onmouseover="this.style.textDecoration='underline';" onmouseout="this.style.textDecoration='none';">${srv.name}</a>`;
+                    nameHtml = `<a href="https://${srv.name}" target="_blank" style="color: inherit; text-decoration: none;" onmouseover="this.style.textDecoration='underline'; this.style.color='#f97316';" onmouseout="this.style.textDecoration='none'; this.style.color='inherit';">${srv.name}</a>`;
                     rootDomain = getRootDomain(srv.name);
                 }
 
