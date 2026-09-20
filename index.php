@@ -115,20 +115,31 @@ function getCpuUsage() {
     usleep(100000); // 100ms
     $stat2 = @file('/proc/stat');
     
-    $info1 = explode(" ", preg_replace("!cpu +!", "", $stat1[0]));
-    $info2 = explode(" ", preg_replace("!cpu +!", "", $stat2[0]));
+    $info1 = preg_split('/\s+/', trim(preg_replace('/^cpu\s+/', '', $stat1[0])));
+    $info2 = preg_split('/\s+/', trim(preg_replace('/^cpu\s+/', '', $stat2[0])));
     
-    $dif = array();
-    $dif['user'] = $info2[0] - $info1[0];
-    $dif['nice'] = $info2[1] - $info1[1];
-    $dif['sys'] = $info2[2] - $info1[2];
-    $dif['idle'] = $info2[3] - $info1[3];
+    // idle + iowait
+    $idle1 = (float)$info1[3] + (isset($info1[4]) ? (float)$info1[4] : 0);
+    // user + nice + system + irq + softirq + steal
+    $nonIdle1 = (float)$info1[0] + (float)$info1[1] + (float)$info1[2] + 
+                (isset($info1[5]) ? (float)$info1[5] : 0) + 
+                (isset($info1[6]) ? (float)$info1[6] : 0) + 
+                (isset($info1[7]) ? (float)$info1[7] : 0);
+    $total1 = $idle1 + $nonIdle1;
     
-    $total = array_sum($dif);
-    $cpu = array();
-    foreach($dif as $x=>$y) $cpu[$x] = round($y / $total * 100, 1);
+    $idle2 = (float)$info2[3] + (isset($info2[4]) ? (float)$info2[4] : 0);
+    $nonIdle2 = (float)$info2[0] + (float)$info2[1] + (float)$info2[2] + 
+                (isset($info2[5]) ? (float)$info2[5] : 0) + 
+                (isset($info2[6]) ? (float)$info2[6] : 0) + 
+                (isset($info2[7]) ? (float)$info2[7] : 0);
+    $total2 = $idle2 + $nonIdle2;
     
-    return $cpu['user'] + $cpu['sys'];
+    $totald = $total2 - $total1;
+    $idled = $idle2 - $idle1;
+    
+    if ($totald == 0) return 0;
+    
+    return round((($totald - $idled) / $totald) * 100, 1);
 }
 
 // Function to get CPU Spec
