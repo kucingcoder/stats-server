@@ -402,7 +402,8 @@ body::after {
     border-radius: 12px;
     font-size: 1.2rem;
     font-weight: 700;
-    color: #fb7185;
+    color: #3b82f6; /* Default cold/blue */
+    transition: color 0.3s ease;
 }
 
 .card-temp svg {

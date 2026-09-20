@@ -48,7 +48,25 @@ function updateUI(data) {
 
     // Update CPU
     if(document.getElementById('cpu-spec')) document.getElementById('cpu-spec').innerText = data.cpu.spec;
-    if(document.getElementById('cpu-temp')) document.getElementById('cpu-temp').innerHTML = data.cpu.temp;
+    if(document.getElementById('cpu-temp')) {
+        document.getElementById('cpu-temp').innerHTML = data.cpu.temp;
+        
+        const tempContainer = document.getElementById('cpu-temp-container');
+        if (tempContainer && data.cpu.temp !== 'N/A') {
+            const tempValue = parseFloat(data.cpu.temp);
+            if (!isNaN(tempValue)) {
+                if (tempValue < 50) {
+                    tempContainer.style.color = '#3b82f6'; // Blue
+                } else if (tempValue < 65) {
+                    tempContainer.style.color = '#eab308'; // Yellow
+                } else if (tempValue < 80) {
+                    tempContainer.style.color = '#f97316'; // Orange
+                } else {
+                    tempContainer.style.color = '#ef4444'; // Red
+                }
+            }
+        }
+    }
     const cpuPercent = Math.min(Math.max(data.cpu.percent, 0), 100);
     if(document.getElementById('cpu-bar')) document.getElementById('cpu-bar').style.width = `${cpuPercent}%`;
     if(document.getElementById('cpu-dot')) document.getElementById('cpu-dot').style.left = `calc(${cpuPercent}% - 4px)`;
