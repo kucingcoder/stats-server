@@ -119,8 +119,8 @@ function updateUI(data) {
         data.top_processes.forEach(proc => {
             topList.innerHTML += `
                 <div class="list-item">
-                    <span class="item-name" style="color: #ff5e00; text-shadow: 0 0 5px rgba(255, 94, 0, 0.8), 0 0 10px rgba(255, 94, 0, 0.6);">${proc.name}</span>
-                    <span class="item-value" style="color: #ff5e00; text-shadow: 0 0 5px rgba(255, 94, 0, 0.8), 0 0 10px rgba(255, 94, 0, 0.6);">${proc.cpu}% <span style="font-size:0.75rem;color:#ff5e00;opacity:0.8;text-shadow:none;">CPU</span></span>
+                    <span class="item-name">${proc.name}</span>
+                    <span class="item-value" style="color: var(--cpu-color);">${proc.cpu}% <span style="font-size:0.75rem;color:var(--text-muted);">CPU</span></span>
                 </div>
             `;
         });
