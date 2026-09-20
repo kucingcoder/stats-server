@@ -7,7 +7,7 @@
     --primary-color: #0ea5e9;
     --cpu-color: #ef4444; 
     --cpu-bg: #4c1d95;
-    --ram-color: #10b981; 
+    --ram-color: #22c55e; 
     --ram-bg: #047857;
     --storage-color: #fbbf24;
     --storage-bg: #b45309;
@@ -357,7 +357,7 @@ body::after {
 
 .fill-ram { 
     background: var(--ram-color);
-    box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+    box-shadow: 0 8px 20px rgba(34, 197, 94, 0.3);
 }
 .fill-storage { 
     background: var(--storage-color);
