@@ -46,6 +46,22 @@ function updateUI(data) {
     if(document.getElementById('net-rx') && data.network) document.getElementById('net-rx').innerText = data.network.rx + ' In';
     if(document.getElementById('net-tx') && data.network) document.getElementById('net-tx').innerText = data.network.tx + ' Out';
 
+    // Update Cloudflared
+    if (data.cloudflared && data.cloudflared.installed) {
+        const cfBadge = document.getElementById('cf-tunnel-badge');
+        const cfStatus = document.getElementById('cf-tunnel-status');
+        if (cfBadge && cfStatus) {
+            cfBadge.style.display = 'flex';
+            if (data.cloudflared.status === 'Running') {
+                cfBadge.style.color = '#38bdf8'; // Blue for Cloudflare
+                cfStatus.innerText = 'Tunnel Active';
+            } else {
+                cfBadge.style.color = 'var(--text-muted)';
+                cfStatus.innerText = 'Tunnel Stopped';
+            }
+        }
+    }
+
     // Update CPU
     if(document.getElementById('cpu-spec')) document.getElementById('cpu-spec').innerText = data.cpu.spec;
     if(document.getElementById('cpu-temp')) {
