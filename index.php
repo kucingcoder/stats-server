@@ -730,7 +730,7 @@ if (file_exists('/etc/os-release')) {
             <div class="card card-list">
                 <div class="card-titles" style="margin-bottom: 15px;">
                     <span class="sub-title" style="color: var(--primary-color);">SERVICE</span>
-                    <h2>Support System</h2>
+                    <h2 id="support-system-title">Support System</h2>
                 </div>
                 <div class="list-container" id="support-services-list">
                     <div class="list-item">Loading...</div>

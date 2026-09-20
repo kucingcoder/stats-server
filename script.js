@@ -142,7 +142,7 @@ function updateUI(data) {
             
             const titleEl = document.getElementById('webserver-title');
             if (titleEl) {
-                titleEl.innerText = webServerName;
+                titleEl.innerText = `${webServerName} (${data.services.websites.length} Sites)`;
             }
 
             // Urutkan berdasarkan root domain (domain utama) lalu subdomain
@@ -181,6 +181,12 @@ function updateUI(data) {
     if (data.registered_services && document.getElementById('support-services-list')) {
         const supportList = document.getElementById('support-services-list');
         supportList.innerHTML = '';
+        
+        const supportTitleEl = document.getElementById('support-system-title');
+        if (supportTitleEl) {
+            supportTitleEl.innerText = `System (${data.registered_services.length} App)`;
+        }
+
         if (data.registered_services.length > 0) {
             data.registered_services.forEach(srv => {
                 let leftHtml = srv.domain || 'N/A';
