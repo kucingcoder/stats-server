@@ -419,8 +419,8 @@ body::after {
 }
 
 .badge-outline-ram {
-    background: rgba(16, 185, 129, 0.1);
-    color: #34d399;
+    background: rgba(34, 197, 94, 0.1);
+    color: var(--ram-color);
 }
 
 .badge-outline-storage {
