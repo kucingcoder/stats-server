@@ -683,7 +683,7 @@ if (file_exists('/etc/os-release')) {
             <!-- Services Card -->
             <div class="card card-list">
                 <div class="card-titles" style="margin-bottom: 15px;">
-                    <span class="sub-title ram-color">WEB SERVER</span>
+                    <span class="sub-title" style="color: #f97316;">WEB SERVER</span>
                     <h2 id="webserver-title">Websites</h2>
                 </div>
                 <div class="list-container" id="services-list">
