@@ -460,7 +460,7 @@ function getRegisteredServices() {
 
 // Function to get Stopped/Failed Services
 function getFailedServices() {
-    $cmd = "systemctl list-units --type=service --state=inactive,failed --no-legend 2>/dev/null | awk '{print $1, $4}' | while read srv state; do if [ \"$(systemctl is-enabled \"\\$srv\" 2>/dev/null)\" = \"enabled\" ]; then echo \"\\$srv \\$state\"; fi; done";
+    $cmd = 'for unit in $(systemctl list-unit-files --state=enabled --type=service --type=socket --no-legend 2>/dev/null | awk \'{print $1}\' | grep -v \'@\.service\' | grep -v \'@\.socket\'); do state=$(systemctl is-active "$unit" 2>/dev/null); if [ "$state" = "inactive" ] || [ "$state" = "failed" ]; then echo "$unit $state"; fi; done';
     @exec($cmd, $lines);
     $failed = [];
     if (!empty($lines)) {
@@ -468,7 +468,7 @@ function getFailedServices() {
             $line = trim($line);
             if (!empty($line)) {
                 $parts = explode(' ', $line);
-                $name = str_replace('.service', '', $parts[0]);
+                $name = str_replace(['.service', '.socket'], '', $parts[0]);
                 $status = (isset($parts[1]) && $parts[1] === 'failed') ? 'Failed' : 'Stopped';
                 $failed[] = ['name' => $name, 'status' => $status];
             }
