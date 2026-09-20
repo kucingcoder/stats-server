@@ -201,7 +201,7 @@ function updateUI(data) {
         }
     }
 
-    // Update Failed Services
+    // Update Stopped Services
     if (data.failed_services && document.getElementById('failed-services-list')) {
         const failedList = document.getElementById('failed-services-list');
         failedList.innerHTML = '';
@@ -215,7 +215,7 @@ function updateUI(data) {
                 `;
             });
         } else {
-             failedList.innerHTML = '<div class="list-item"><span class="item-name" style="color: var(--text-muted);">No failed services</span><span class="item-value" style="color: #10b981; font-weight: bold;">All Good</span></div>';
+             failedList.innerHTML = '<div class="list-item"><span class="item-name" style="color: var(--text-muted);">No stopped services</span><span class="item-value" style="color: #10b981; font-weight: bold;">All Good</span></div>';
         }
     }
 }

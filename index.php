@@ -458,17 +458,19 @@ function getRegisteredServices() {
     return [];
 }
 
-// Function to get Failed Services
+// Function to get Stopped/Failed Services
 function getFailedServices() {
-    $cmd = "systemctl list-units --state=failed --no-legend --plain 2>/dev/null | awk '{print $1}'";
+    $cmd = "systemctl list-units --type=service --state=inactive,failed --no-legend 2>/dev/null | awk '{print $1, $4}' | while read srv state; do if [ \"$(systemctl is-enabled \"\\$srv\" 2>/dev/null)\" = \"enabled\" ]; then echo \"\\$srv \\$state\"; fi; done";
     @exec($cmd, $lines);
     $failed = [];
     if (!empty($lines)) {
         foreach ($lines as $line) {
             $line = trim($line);
             if (!empty($line)) {
-                $name = str_replace('.service', '', $line);
-                $failed[] = ['name' => $name, 'status' => 'Failed'];
+                $parts = explode(' ', $line);
+                $name = str_replace('.service', '', $parts[0]);
+                $status = (isset($parts[1]) && $parts[1] === 'failed') ? 'Failed' : 'Stopped';
+                $failed[] = ['name' => $name, 'status' => $status];
             }
         }
     }
@@ -742,11 +744,11 @@ if (file_exists('/etc/os-release')) {
                 </div>
             </div>
 
-            <!-- Failed Services Card -->
+            <!-- Stopped Services Card -->
             <div class="card card-list">
                 <div class="card-titles" style="margin-bottom: 15px;">
                     <span class="sub-title" style="color: #f43f5e;">ALERT</span>
-                    <h2>Failed Services</h2>
+                    <h2>Stopped Services</h2>
                 </div>
                 <div class="list-container" id="failed-services-list">
                     <div class="list-item">Loading...</div>
