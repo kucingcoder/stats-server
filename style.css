@@ -5,7 +5,7 @@
     --card-border: rgba(255, 255, 255, 0.05);
     
     --primary-color: #0ea5e9;
-    --cpu-color: #fb7185; 
+    --cpu-color: #ef4444; 
     --cpu-bg: #4c1d95;
     --ram-color: #10b981; 
     --ram-bg: #047857;
@@ -539,7 +539,7 @@ body::after {
     box-shadow: 0 0 5px rgba(0,0,0,0.5);
 }
 
-.dot-cpu { background: #fb7185; }
+.dot-cpu { background: #ef4444; }
 .dot-storage { background: #fbbf24; }
 
 :root {
