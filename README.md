@@ -2,8 +2,7 @@
 
 A lightweight, beautiful, and real-time server monitoring dashboard. This project is built specifically for **Homelab Enthusiasts** and anyone who wants to monitor their server or mini PC's status directly from a web browser with a modern interface.
 
-<img width="1920" height="1523" alt="fullpage_snapshot_stats_mashanif_web_id_2026-09-21-03-05-43 1" src="https://github.com/user-attachments/assets/b937cb8e-9778-4b7f-bd27-773b0eb4c0d3" />
-
+<img width="1920" height="1523" alt="Group 32" src="https://github.com/user-attachments/assets/1112180d-1350-40a3-9440-9463d1c6cb97" />
 
 ## 📌 Features
 - **CPU / Processor**: Current CPU usage, specifications, and temperature.
